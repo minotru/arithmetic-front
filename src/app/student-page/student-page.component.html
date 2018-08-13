@@ -1,0 +1,82 @@
+<section class="top-section" fxLayout="row" fxLayoutAlign="space-around">
+  <section class="section">
+    <header>
+      <h1 class="header-text">ТЕМЫ</h1>
+    </header>
+    <div class="topics" fxLayout="row" fxLayoutGap="1em">
+      <div class="topic" fxLayout="column">
+        <div class="topic-name">ПРОСТО</div>
+        <div class="levels">
+          <div class="level">
+            2
+          </div>
+          <div class="level">3</div>
+          <div class="level">4</div>
+          <div class="level">5</div>
+          <div class="level">6</div>
+          <div class="level">7</div>
+          <div class="level">8</div>
+          <div class="level">9</div>
+        </div>
+      </div>
+      <div class=topic>
+        <div class="topic-name">БРАТ</div>
+      </div>
+      <div class=topic>
+        <div class="topic-name">ДРУГ + БРАТ</div>
+      </div>
+      <div class=topic>
+        <div class="topic-name">УМНОЖЕНИЕ</div>
+      </div>
+      <div class=topic>
+        <div class="topic-name">ДЕЛЕНИЕ</div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <header>
+      <h1 class="header-text">УСТАНОВКА ПАРАМЕТРОВ</h1>
+      <div class="params">
+        <div class="params-digits" fxLayout="row" fxLayoutAlign="start center">
+          <span>Двузначные</span>
+          &nbsp;
+          <i class="material-icons params-digits-icon">star</i>
+          <i class="material-icons params-digits-icon">star</i>
+          <i class="material-icons params-digits-icon">star_border</i>
+        </div>
+        <div class="params-speed">
+          Скорость:
+          <input id="speed" type="number" list="speedValues" min="0" max="8">
+          <datalist id="speedValues">
+            <option value="8" >
+            <option value="7" >
+            <option value="6" >
+            <option value="5" >
+            <option value="4" >
+            <option value="3.5" >
+            <option value="3" >
+            <option value="2.5" >
+            <option value="2" >
+          </datalist>
+        </div>
+        <div class="operations-cnt">
+          Количество действий:
+          <input type="number" min="3" max="100">
+        </div>
+      </div>
+    </header>
+  </section>
+</section>
+<section class="bottom-section" fxLayout="row" fxLayoutAlign="space-around center">
+  <span class="funny-digit">0</span>
+  <span class="funny-digit">1</span>
+  <span class="funny-digit">2</span>
+  <span class="funny-digit">3</span>
+  <span class="funny-digit">4</span>
+  <button type="button" class="start-button">Начать</button>
+  <span class="funny-digit">5</span>
+  <span class="funny-digit">6</span>
+  <span class="funny-digit">7</span>
+  <span class="funny-digit">8</span>
+  <span class="funny-digit">9</span>
+</section>

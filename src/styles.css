@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+  font-family: funny-digits;
+  src: url('./assets/funny-digits.ttf') format('truetype');
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}

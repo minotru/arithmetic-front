@@ -1,0 +1,178 @@
+$bk: #30D5C8;
+$text-bk-1: #fff200;
+$text-bk-2: #B7F200;
+$text: black;
+
+:host {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  // background: #FFF764;
+  padding: 1em;
+  padding-bottom: 0;
+  // padding-top: 1em;
+
+}
+
+.section {
+  // background: #FFD539;
+  // background: #C5F337;
+  // background: #FFF764;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 1em; 
+}
+
+.top-section {
+  width: 100%;
+  flex: 1;
+}
+
+.bottom-section {
+  padding: 2em;
+}
+
+.start-button {
+  padding: 0.5em;
+  font-size: 2em;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-radius: 0.5em;
+  background: $text-bk-1;
+}
+
+.start-button:hover {
+  border: 2px solid $text-bk-1;
+  // transform: scale(1.2);
+}
+
+.header-text {
+  padding: 0.25em;
+  border-radius: 0.3em;
+  // color: $text;
+  background:$text-bk-1;
+  text-align: center;
+}
+
+.topics {
+  width: 100%;
+}
+
+
+.topic {
+}
+
+.topic > * {
+  margin: auto;
+}
+
+.levels {
+}
+
+.level {
+  border-radius: 100%;
+  text-align: center;
+  line-height: 2em;
+  width: 2em;
+  height: 2em;
+  margin-top: 0.5em;
+  background: $text-bk-2;
+  // border: 2px solid #709400;
+}
+
+.level-name {
+  font-weight: bolder;
+}
+
+.level:hover {
+  transform: scale(1.1);
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.topic-name {
+  background: $text-bk-1;
+  padding: 0.5em;
+  border-radius: 50%;
+  font-weight: bolder;
+}
+
+.bottom-section {
+  // background: #C5F337;;
+}
+
+.funny-digit {
+  font-family: funny-digits;
+  font-size: 5em;
+  transition: 0.2s ease-in-out;
+  width: auto;
+  // font-weight: bolder;
+  // width: 100%;
+}
+
+.funny-digit:nth-child(1) {
+  color: red;
+  
+}
+
+.funny-digit:nth-child(2) {
+  color: orange;
+}
+
+.funny-digit:nth-child(3) {
+  color: yellow;
+}
+
+.funny-digit:nth-child(4) {
+  color: green;
+}
+
+.funny-digit:nth-child(5) {
+  color: blue  ;
+}
+
+.funny-digit:nth-child(6) {
+  color: darkblue;
+}
+
+.funny-digit:nth-child(7) {
+  color: purple;
+}
+
+.funny-digit:nth-child(8) {
+  color: yellow;
+}
+
+.funny-digit:nth-child(9) {
+  color: green;
+}
+
+.funny-digit:nth-child(10) {
+  color: blue;
+}
+
+.funny-digit:nth-child(11) {
+  color: red;
+}
+
+.funny-digit:hover {
+  transform: scale(1.2) translateY(-10px);
+}
+
+.params > * {
+  margin-bottom: 1em;
+}
+
+.params-digits {
+  font-size: larger;
+}
+
+.params-digits-icon {
+  color: red;
+  // font-size: larger;
+}
+
+.params-digits-icon:hover {
+  cursor: pointer;
+}
