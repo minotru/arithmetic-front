@@ -65,10 +65,11 @@ export class StudentPageComponent implements OnInit {
     });
   }
 
-  selectLevel(topic: string, level: string) {
+  selectLevel(newTopic: string, newLevel: string) {
+    const { level, topic } = this.configForm.value;
     const isSameLevel =
-      this.taskConfig.topic === topic &&
-      this.taskConfig.level === level;
+      newTopic === topic &&
+      newLevel === level;
     if (isSameLevel) {
       this.configForm.patchValue({
         topic: null,
@@ -76,8 +77,8 @@ export class StudentPageComponent implements OnInit {
       });
     } else {
       this.configForm.patchValue({
-        topic,
-        level,
+        topic: newTopic,
+        level: newLevel,
       });
     }
   }
