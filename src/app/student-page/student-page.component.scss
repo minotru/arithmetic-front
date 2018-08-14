@@ -1,26 +1,28 @@
-$bk: #30D5C8;
+$bk: lightblue;
 $text-bk-1: #fff200;
 $text-bk-2: #B7F200;
 $text: black;
+$material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
 
 :host {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  // background: #FFF764;
-  padding: 1em;
+  background: $bk;
+  // background: #FFAA9A;
+  // padding: 1em;
   padding-bottom: 0;
   // padding-top: 1em;
+  padding-top: 1em;
 
 }
 
 .section {
-  // background: #FFD539;
-  // background: #C5F337;
-  // background: #FFF764;
   padding: 1em;
   margin-bottom: 1em;
   border-radius: 1em; 
+  background: white;
+  box-shadow: $material-shadow;
 }
 
 .top-section {
@@ -29,7 +31,9 @@ $text: black;
 }
 
 .bottom-section {
-  padding: 2em;
+  padding: 0.5em;
+  padding-bottom: 0;
+  background: white;
 }
 
 .start-button {
@@ -38,20 +42,19 @@ $text: black;
   text-decoration: none;
   outline: none;
   border: none;
-  border-radius: 0.5em;
+  background: none;
+  border-radius: 0.5em ;
   background: $text-bk-1;
 }
 
 .start-button:hover {
   border: 2px solid $text-bk-1;
-  // transform: scale(1.2);
+  cursor: pointer;
 }
 
 .header-text {
   padding: 0.25em;
-  border-radius: 0.3em;
-  // color: $text;
-  background:$text-bk-1;
+  border-bottom: 2px solid tomato;
   text-align: center;
 }
 
@@ -78,7 +81,6 @@ $text: black;
   height: 2em;
   margin-top: 0.5em;
   background: $text-bk-2;
-  // border: 2px solid #709400;
 }
 
 .level-name {
@@ -92,14 +94,10 @@ $text: black;
 }
 
 .topic-name {
-  background: $text-bk-1;
+  background: #FFD777;
   padding: 0.5em;
-  border-radius: 50%;
+  border-radius: 1em;
   font-weight: bolder;
-}
-
-.bottom-section {
-  // background: #C5F337;;
 }
 
 .funny-digit {
@@ -107,8 +105,9 @@ $text: black;
   font-size: 5em;
   transition: 0.2s ease-in-out;
   width: auto;
-  // font-weight: bolder;
-  // width: 100%;
+  background: white;
+  border-radius: 0.5em 0.5em 0 0 ;
+  padding: 0.1em;
 }
 
 .funny-digit:nth-child(1) {
@@ -121,7 +120,7 @@ $text: black;
 }
 
 .funny-digit:nth-child(3) {
-  color: yellow;
+  color: brown;
 }
 
 .funny-digit:nth-child(4) {
@@ -141,7 +140,7 @@ $text: black;
 }
 
 .funny-digit:nth-child(8) {
-  color: yellow;
+  color: brown;
 }
 
 .funny-digit:nth-child(9) {
@@ -157,6 +156,7 @@ $text: black;
 }
 
 .funny-digit:hover {
+  box-shadow: $material-shadow;
   transform: scale(1.2) translateY(-10px);
 }
 
@@ -170,7 +170,6 @@ $text: black;
 
 .params-digits-icon {
   color: red;
-  // font-size: larger;
 }
 
 .params-digits-icon:hover {
