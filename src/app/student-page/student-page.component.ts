@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConstantPool } from '@angular/compiler';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 interface ITopic {
   name: string;
@@ -51,10 +51,18 @@ export class StudentPageComponent implements OnInit {
   topics: ITopic[] = TOPICS;
   taskConfig: ITaskConfig = { digitsCnt: 1 } as ITaskConfig;
   speedValues: number[] = SPEED_VALUES;
+  configForm: FormGroup;
 
-  constructor() { }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.configForm = this.fb.group({
+      speed: ['', Validators.required],
+      topic: ['', Validators.required],
+      level: ['', Validators.required],
+      digitsCnt: [2, Validators.required],
+      operationsCnt: ['', Validators.required],
+    });
   }
 
   selectLevel(topic: string, level: string) {
@@ -62,26 +70,25 @@ export class StudentPageComponent implements OnInit {
       this.taskConfig.topic === topic &&
       this.taskConfig.level === level;
     if (isSameLevel) {
-      this.taskConfig.topic = null;
-      this.taskConfig.level = null;
+      this.configForm.patchValue({
+        topic: null,
+        level: null,
+      });
     } else {
-      this.taskConfig.topic = topic;
-      this.taskConfig.level = level;
+      this.configForm.patchValue({
+        topic,
+        level,
+      });
     }
   }
 
   setDigitsCnt(cnt: number) {
-    this.taskConfig.digitsCnt = cnt;
-  }
-
-
-  validateTaskConfig() {
-    return Object.values(this.taskConfig).every(v => !!v);
+    this.configForm.patchValue({
+      digitsCnt: cnt,
+    });
   }
 
   start() {
-    if (!this.validateTaskConfig()) {
-      return;
-    }
+    this.taskConfig = this.configForm.value;
   }
 }

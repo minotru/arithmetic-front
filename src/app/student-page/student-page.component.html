@@ -11,7 +11,7 @@
       >
          <div
            class="topic-name"
-           [class.selected]="topic.name === taskConfig.topic"
+           [class.selected]="topic.name === configForm.value['topic']"
           >
             {{topic.caption}}
           </div>
@@ -21,7 +21,8 @@
             class="level"
             (click)="selectLevel(topic.name, level);"
             [class.selected]=
-              "topic.name === taskConfig.topic && taskConfig.level === level"
+              "topic.name === configForm.value['topic'] 
+              && level === configForm.value['level']"
           >  
             {{level}}
           </div>
@@ -37,14 +38,14 @@
           Разряды:
           &nbsp;
           <i class="material-icons params-digits-icon" (click)="setDigitsCnt(1)" title="Однозначные">
-            {{taskConfig.digitsCnt >= 1 ? 'star' : 'star_border'}}
+            {{configForm.value['digitsCnt'] >= 1 ? 'star' : 'star_border'}}
           </i>
           <i
             class="material-icons params-digits-icon" (click)="setDigitsCnt(2)" title="Двузначные">
-            {{taskConfig.digitsCnt >= 2 ? 'star' : 'star_border'}}
+            {{configForm.value['digitsCnt'] >= 2 ? 'star' : 'star_border'}}
           </i>
           <i class="material-icons params-digits-icon" (click)="setDigitsCnt(3)" title="Трехзначные">
-            {{taskConfig.digitsCnt >= 3 ? 'star' : 'star_border'}}
+            {{configForm.value['digitsCnt'] >= 3 ? 'star' : 'star_border'}}
           </i>
         </div>
         <div class="params-speed">
@@ -57,6 +58,7 @@
             step="0.1"
             min="0.3"
             max="7"
+            [formControl]="configForm.get('speed')"
             required
           >
           <datalist id="speedValues">
@@ -65,7 +67,14 @@
         </div>
         <div class="operations-cnt">
           Количество действий:
-          <input class="my-input" required type="number" min="3" max="100">
+          <input
+            class="my-input"
+            required
+            type="number"
+            min="3"
+            max="100"
+            [formControl]="configForm.get('operationsCnt')"
+          >
         </div>
       </div>
     </header>
@@ -77,7 +86,7 @@
   <span class="funny-digit" style="color:brown">2</span>
   <span class="funny-digit" style="color:green">3</span>
   <span class="funny-digit" style="color:blue">4</span>
-  <button type="button" (click)="start()" [disabled]="!validateTaskConfig()" class="start-button">Начать</button>
+  <button type="button" (click)="start()" [disabled]="!configForm.valid" class="start-button">Начать</button>
   <span class="funny-digit" style="color:darkblue">5</span>
   <span class="funny-digit" style="color:purple">6</span>
   <span class="funny-digit" style="color:brown">7</span>
