@@ -3,33 +3,29 @@
     <header>
       <h1 class="header-text">ТЕМЫ</h1>
     </header>
-    <div class="topics" fxLayout="row" fxLayoutGap="1em">
-      <div class="topic" fxLayout="column">
-        <div class="topic-name">ПРОСТО</div>
-        <div class="levels">
-          <div class="level">
-            2
+    <div class="topics" fxLayout="row" fxLayoutGap="1em" fxLayoutAlign="start start">
+      <div
+        *ngFor="let topic of topics"
+        class="topic"
+        fxLayout="column"
+      >
+         <div
+           class="topic-name"
+           [class.selected]="topic.name === taskConfig.topic"
+          >
+            {{topic.caption}}
           </div>
-          <div class="level">3</div>
-          <div class="level">4</div>
-          <div class="level">5</div>
-          <div class="level">6</div>
-          <div class="level">7</div>
-          <div class="level">8</div>
-          <div class="level">9</div>
+         <div class="levels">
+          <div
+            *ngFor="let level of topic.levels"
+            class="level"
+            (click)="selectLevel(topic.name, level);"
+            [class.selected]=
+              "topic.name === taskConfig.topic && taskConfig.level === level"
+          >  
+            {{level}}
+          </div>
         </div>
-      </div>
-      <div class=topic>
-        <div class="topic-name">БРАТ</div>
-      </div>
-      <div class=topic>
-        <div class="topic-name">ДРУГ + БРАТ</div>
-      </div>
-      <div class=topic>
-        <div class="topic-name">УМНОЖЕНИЕ</div>
-      </div>
-      <div class=topic>
-        <div class="topic-name">ДЕЛЕНИЕ</div>
       </div>
     </div>
   </section>
@@ -38,45 +34,53 @@
       <h1 class="header-text">УСТАНОВКА ПАРАМЕТРОВ</h1>
       <div class="params">
         <div class="params-digits" fxLayout="row" fxLayoutAlign="start center">
-          <span>Двузначные</span>
+          Разряды:
           &nbsp;
-          <i class="material-icons params-digits-icon">star</i>
-          <i class="material-icons params-digits-icon">star</i>
-          <i class="material-icons params-digits-icon">star_border</i>
+          <i class="material-icons params-digits-icon" (click)="setDigitsCnt(1)" title="Однозначные">
+            {{taskConfig.digitsCnt >= 1 ? 'star' : 'star_border'}}
+          </i>
+          <i
+            class="material-icons params-digits-icon" (click)="setDigitsCnt(2)" title="Двузначные">
+            {{taskConfig.digitsCnt >= 2 ? 'star' : 'star_border'}}
+          </i>
+          <i class="material-icons params-digits-icon" (click)="setDigitsCnt(3)" title="Трехзначные">
+            {{taskConfig.digitsCnt >= 3 ? 'star' : 'star_border'}}
+          </i>
         </div>
         <div class="params-speed">
           Скорость:
-          <input id="speed" type="number" list="speedValues" min="0" max="8">
+          <input
+            id="speed"
+            class="my-input"
+            type="number"
+            list="speedValues" 
+            step="0.1"
+            min="0.3"
+            max="7"
+            required
+          >
           <datalist id="speedValues">
-            <option value="8" >
-            <option value="7" >
-            <option value="6" >
-            <option value="5" >
-            <option value="4" >
-            <option value="3.5" >
-            <option value="3" >
-            <option value="2.5" >
-            <option value="2" >
+            <option *ngFor="let opt of speedValues" [value]="opt">
           </datalist>
         </div>
         <div class="operations-cnt">
           Количество действий:
-          <input type="number" min="3" max="100">
+          <input class="my-input" required type="number" min="3" max="100">
         </div>
       </div>
     </header>
   </section>
 </section>
 <section class="bottom-section" fxLayout="row" fxLayoutAlign="space-around center">
-  <span class="funny-digit">0</span>
-  <span class="funny-digit">1</span>
-  <span class="funny-digit">2</span>
-  <span class="funny-digit">3</span>
-  <span class="funny-digit">4</span>
-  <button type="button" class="start-button">Начать</button>
-  <span class="funny-digit">5</span>
-  <span class="funny-digit">6</span>
-  <span class="funny-digit">7</span>
-  <span class="funny-digit">8</span>
-  <span class="funny-digit">9</span>
+  <span class="funny-digit" style="color:red">0</span>
+  <span class="funny-digit" style="color:orange">1</span>
+  <span class="funny-digit" style="color:brown">2</span>
+  <span class="funny-digit" style="color:green">3</span>
+  <span class="funny-digit" style="color:blue">4</span>
+  <button type="button" (click)="start()" [disabled]="!validateTaskConfig()" class="start-button">Начать</button>
+  <span class="funny-digit" style="color:darkblue">5</span>
+  <span class="funny-digit" style="color:purple">6</span>
+  <span class="funny-digit" style="color:brown">7</span>
+  <span class="funny-digit" style="color:blue">8</span>
+  <span class="funny-digit" style="color:red">9</span>
 </section>
