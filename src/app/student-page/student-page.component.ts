@@ -1,14 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { TopicName, IOperation, OperationType, ITaskConfig } from '../interfaces/task';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { TopicName, ITopic, IOperation, OperationType, ITaskConfig, ITask } from '../interfaces/task';
 import { UserService } from '../services/user.service';
 import { OPERATIONS } from '../mocks/operations';
-
-interface ITopic {
-  name: string;
-  caption: string;
-  levels: string[];
-}
+import { TaskService } from '../services/task.service';
 
 const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.7,
@@ -18,7 +13,16 @@ enum AppState {
   CONFIG = 'config',
   RUNNING = 'running',
   ENTER_ANSWER = 'enter_answer',
+  ANSWERED = 'answered',
 }
+
+const DEFAULT_TASK_CONFIG: ITaskConfig =  {
+  speed: null,
+  topic: null,
+  level: null,
+  digitsCnt: 2,
+  operationsCnt: null,
+};
 
 const TOPICS: ITopic[] = [
   {
@@ -50,29 +54,32 @@ const TOPICS: ITopic[] = [
 })
 export class StudentPageComponent implements OnInit {
   topics: ITopic[] = TOPICS;
-  taskConfig: ITaskConfig = { digitsCnt: 2, speed: 0.1 } as ITaskConfig;
   speedValues: number[] = SPEED_VALUES;
   configForm: FormGroup;
-  readonly operations = [...OPERATIONS];
+  task: ITask;
   currentOperationIndex = 0;
   timerId: number;
   appState: AppState;
+  @ViewChild('answerInput') answerInput: HTMLInputElement;
+  @ViewChild('pastOperationsBlock') pastOperationsBlock: HTMLElement;
+  answerInputControl = new FormControl('');
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private taskService: TaskService,
   ) {}
 
   ngOnInit() {
-    this.appState = AppState.ENTER_ANSWER;
     this.configForm = this.fb.group({
-      speed: ['', Validators.required],
+      speed: [0.3, Validators.required],
       topic: ['', Validators.required],
       level: ['', Validators.required],
       digitsCnt: [2, Validators.required],
       operationsCnt: ['', Validators.required],
     });
-    // this.startTimer();
+    this.appState = AppState.CONFIG;
+    // this.onStart();
   }
 
   selectLevel(newTopic: string, newLevel: string) {
@@ -99,9 +106,15 @@ export class StudentPageComponent implements OnInit {
     });
   }
 
-  start() {
-    this.taskConfig = this.configForm.value;
-    this.appState = AppState.RUNNING;
+  onStart() {
+    const taskConfig = this.configForm.value as ITaskConfig;
+    // taskConfig.speed = 0.1;
+    this.taskService
+      .generateTask(taskConfig)
+      .subscribe((task) => {
+        this.task = task;
+        this.runApp();
+      });
   }
 
   operationToString(operation: IOperation): string {
@@ -112,23 +125,32 @@ export class StudentPageComponent implements OnInit {
     if (this.currentOperationIndex === -1) {
       return '';
     }
-    return this.operationToString(this.operations[this.currentOperationIndex]);
+    const currentOperation = this.operations[this.currentOperationIndex];
+    return this.operationToString(currentOperation);
   }
 
-  get pastOperationStrings(): string[] {
+  get pastOperations(): IOperation[] {
     if (this.currentOperationIndex === -1) {
-      return [''];
+      return [];
     }
     return this.operations
-      .slice(0, this.currentOperationIndex + 1)
-      .map(operation => this.operationToString(operation));
+      .slice(0, this.currentOperationIndex + 1);
   }
 
-  startTimer() {
+  isNumberInput(event: any): boolean {
+    return event.key >= '0' && event.key <= '9';
+  }
+
+  runApp() {
+    this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
-    this.timerId = window.setInterval(
-      () => this.onNextOperation(),
-      this.taskConfig.speed * 1000,
+    // this.answerInput.focus();
+    window.setTimeout(() => {
+      this.timerId = window.setInterval(
+        () => this.onNextOperation(),
+        this.task.config.speed * 1000)
+      },
+      1000,
     );
   }
 
@@ -137,12 +159,61 @@ export class StudentPageComponent implements OnInit {
   }
 
   onNextOperation() {
-    this.currentOperationIndex++;
-    if (this.currentOperationIndex === this.operations.length) {
+    if (this.currentOperationIndex + 1 === this.operations.length) {
       window.clearInterval(this.timerId);
-      // this.currentOperationIndex = 0;
+      this.appState = AppState.ENTER_ANSWER;
+      // this.answerInput.focus();
     } else {
+      this.currentOperationIndex++;
       this.playTickSound();
     }
+    this.pastOperationsBlock.scrollBy(50, 0);
+  }
+
+  onAnswerInput() {
+    const userAnswer = Number.parseInt(this.answerInput.value);
+    this.taskService
+      .checkAnswer(userAnswer)
+      .subscribe((task => {
+        this.task = task;
+        this.answerInput.disabled = true;
+        if (task.isCorrect) {
+          this.answerInput.classList.add('valid');
+        } else {
+          this.answerInput.value = task.answer.toString();
+          this.answerInput.classList.add('invalid');
+        }
+        this.appState = AppState.ANSWERED;
+      }));
+  }
+
+  get operations(): IOperation[] {
+    return this.task.operations;
+  }
+
+  @ViewChild('answerInput') set setAnswerInput(ref: ElementRef) {
+    if (ref) {
+      this.answerInput = ref.nativeElement;
+    }
+  }
+
+  @ViewChild('pastOperationsBlock') set setPastOperations(ref: ElementRef) {
+    if (ref) {
+      this.pastOperationsBlock = ref.nativeElement;
+    }
+  }
+
+  isCorrect(): boolean {
+    return this.task.isCorrect;
+  }
+
+  onRetry() {
+    this.onStart();
+  }
+
+  onClear() {
+    this.configForm.setValue(DEFAULT_TASK_CONFIG);
+    this.answerInput.value = '';
+    this.appState = AppState.CONFIG;
   }
 }

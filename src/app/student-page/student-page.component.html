@@ -1,5 +1,5 @@
-<main class="main-section" fxLayout="row" fxLayoutAlign="space-around">
-  <section class="section"[class.not-in-focus]="appState !== 'config'">
+<main class="main-section" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="1em">
+  <section class="section" [class.not-in-focus]="appState !== 'config'">
     <header>
       <h1 class="section-header-text">ТЕМЫ</h1>
     </header>
@@ -30,28 +30,53 @@
       </div>
     </div>
   </section>
-  <section *ngIf="appState !== 'config'" class="section task-section" fxLayout="column" fxFlex="auto"> 
+  <section class="section task-section" *ngIf="appState !== 'config'" fxLayout="column"> 
     <header class="section-header">
       <h1 class="section-header-text">ПРИМЕР</h1>
     </header>
-    <div class="section-content" fxLayout="column" fxLayoutAlign="space-between" style="height: 100%;">
-      <div class="task">
+    <div class="section-content" fxLayout="column" fxLayoutAlign="space-between center" style="height: 100%;">
+      <!-- <span *ngIf="appState === 'enter_answer'">Введите ответ</span> -->
+      <div class="task" *ngIf="appState !== 'config'">
         <span *ngIf="appState === 'running'">
           {{currentOperationString}}
         </span>
         <input
-          *ngIf="appState === 'enter_answer'"
+          *ngIf="appState === 'enter_answer' || appState === 'answered'"
           type="text"
+          maxlength="3"
+          (keypress)="isNumberInput($event)"
+          (keyup.enter)="onAnswerInput()"
+          fxFlex="none"
           class="my-input enter-answer-input"
+          #answerInput
+          autofocus
         >
       </div>
-      <div class="past-operations">
+
+      <button
+        *ngIf="appState === 'enter_answer'"
+        class="enter-answer-button button"
+        (click)="onAnswerInput()"
+        type="button"
+      >
+        Ответить
+      </button>
+      <span *ngIf="appState === 'answered'" fxLayoutGap="1em">
+        <button type="button" class="button" (click)="onRetry()">
+          Еще раз
+        </button>
+        <button type="button" class="button" (click)="onClear()">
+          Очистить
+        </button>
+      </span>
+      <div class="past-operations" *ngIf="appState !== 'config'" #pastOperationsBlock>
         <span
-          *ngFor="let operation of operations"
+          *ngFor="let operation of pastOperations"
           class="past-operation"
         >
           {{operationToString(operation)}}
         </span>
+        &nbsp;
       </div>
     </div>
   </section>
@@ -59,7 +84,7 @@
     <header>
       <h1 class="section-header-text">УСТАНОВКА ПАРАМЕТРОВ</h1>
     </header>
-    <div class="params">
+    <div class="params" fxLayout="column">
       <div class="params-digits" fxLayout="row" fxLayoutAlign="start center">
         Разряды:
         &nbsp;
@@ -103,6 +128,15 @@
           [formControl]="configForm.get('operationsCnt')"
         >
       </div>
+      <button
+        type="button"
+        (click)="onStart()"
+        [disabled]="!configForm.valid"
+        class="button start-button"
+        *ngIf="appState === 'config'"
+      >
+        Начать
+      </button>
     </div>
   </section>
 </main>
@@ -112,7 +146,6 @@
   <span class="funny-digit" style="color:brown">2</span>
   <span class="funny-digit" style="color:green">3</span>
   <span class="funny-digit" style="color:blue">4</span>
-  <button type="button" (click)="start()" [disabled]="!configForm.valid" class="start-button">Начать</button>
   <span class="funny-digit" style="color:darkblue">5</span>
   <span class="funny-digit" style="color:purple">6</span>
   <span class="funny-digit" style="color:brown">7</span>

@@ -30,18 +30,9 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
 
 .main-section {
   padding: 1em;
-  width: 100vw;
+  // width: 100vw;
   flex: 1;
 }
-
-.main-section > * {
-  margin-right: 1em;
-}
-
-.main-section > *:last-child {
-  margin-right: 0;
-}
-
 
 .bottom-section {
   font-size: smaller;
@@ -50,7 +41,7 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
   background: white;
 }
 
-.start-button {
+.button {
   padding: 0.5em;
   font-size: 2em;
   text-decoration: none;
@@ -58,7 +49,22 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
   border: none;
   background: none;
   border-radius: 0.5em ;
-  background: $text-bk-1;
+  color: $text-blue;
+  background: #FFD777;
+}
+
+.button:hover {
+  cursor: pointer;
+  box-shadow: $material-shadow;
+}
+
+.enter-answer-button {
+  max-width: 50%;
+  // flex: 0 1 auto;
+}
+
+.start-button {
+  // background: $text-bk-1;
 }
 
 .start-button:disabled {
@@ -67,7 +73,6 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
 
 .start-button:hover {
   border: 2px solid $text-bk-1;
-  cursor: pointer;
 }
 
 .section-header-text {
@@ -84,8 +89,8 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
 }
 
 
-.topic {
-}
+// .topic {
+// }
 
 .topic > * {
   margin: auto;
@@ -149,9 +154,9 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
   font-size: larger;
 }
 
-.params-digits {
-  // font-size: larger;
-}
+// .params-digits {
+//   // font-size: larger;
+// }
 
 .params-digits-icon {
   color: red;
@@ -170,10 +175,16 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
 }
 
 .enter-answer-input {
-  font-size: 1em;
-  width: 3em;
   color: $text-blue;
-  -webkit-appearance: none;
+  width: 100%;
+  font-size: 1em;
+}
+.enter-answer-input.valid {
+  color: $text-bk-2;
+}
+
+.enter-answer-input.invalid {
+  color: $text-accent;
 }
 
 .my-input:focus {
@@ -181,24 +192,20 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
 }
 
 .task-section {
-  // width: 100%;
-  // max-width: 50%;
+  flex: 1;
+  overflow: auto;
 }
-.section-content {
 
-}
+// .section-content {
+// }
 
 .task {
   margin: 0 auto;
   font-size: 12em;
   color: #5190A5;
-  // color: $text-bk-2;
-  // box-shadow: 0 10px red;
-  // border-bottom: 4px solid red;
 }
 
 .past-operations {
-  display: none;
   width: 100%;
   font-size: x-large;
   color: $text-blue;
@@ -207,7 +214,6 @@ $material-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 
   border-right: 0;
   white-space: nowrap;
   overflow: hidden;
-  flex-grow: 0;
 }
 
 .past-operation {

@@ -12,11 +12,13 @@ export interface IOperation {
 }
 
 export interface ITask {
+  id: string;
   userId?: string;
   config: ITaskConfig;
-  answer: number;
+  answer?: number;
   isCorrect?: boolean;
-  createdAt: Date;
+  createdAt?: Date;
+  operations: IOperation[];
 }
 
 export enum OperationType {
@@ -33,4 +35,10 @@ export enum TopicName {
   FRIEND_AND_BROTHER = 'friend-plus-brother',
   MULTIPLICATION = 'multiplication',
   DIVISION = 'division',
+}
+
+export interface ITopic {
+  name: string;
+  caption: string;
+  levels: string[];
 }
