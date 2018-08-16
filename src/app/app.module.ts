@@ -9,21 +9,31 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './error-interceptor';
 import { UserService } from './services/user.service';
 import { TaskService } from './services/task.service';
+import { HeaderComponent } from './header/header.component';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { AppRoutingModule } from './app-routing.module';
+import { CanActivateService } from './services/can-activate.service';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StudentPageComponent,
+    HeaderComponent,
+    LoginPageComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
     FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
+    AppRoutingModule,
   ],
   providers: [
     UserService,
     TaskService,
+    CanActivateService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,

@@ -1,0 +1,22 @@
+$text-accent: #FF8C77;
+$text-blue: #5190A5;
+
+.header {
+  padding: 0.25em 0.5em;
+  background: white;
+  color: $text-blue;
+  font-size: larger;
+  font-weight: bolder;
+}
+
+.header-text {
+  border-bottom: 2px solid $text-accent;
+}
+
+.logout-link {
+  text-decoration: none;
+}
+
+.logout-link:hover {
+  cursor: pointer;
+}

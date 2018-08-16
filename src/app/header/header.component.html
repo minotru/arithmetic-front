@@ -1,0 +1,10 @@
+<header class="header" fxLayout="row" fxLayoutAlign="space-between center">
+  <span class="header-text">Ментальная арифметика</span>
+  <span>
+    <span *ngIf="userService.isAuthorized()">
+      <span class="header-text">{{userService.fullUserName}}</span>
+      &nbsp;|&nbsp;
+      <span (click)="logout()" class="logout-link">Выйти</span>
+    </span>
+  </span>
+</header>

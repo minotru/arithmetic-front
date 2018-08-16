@@ -66,7 +66,6 @@ export class StudentPageComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
     private taskService: TaskService,
   ) {}
 

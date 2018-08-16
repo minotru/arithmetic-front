@@ -1,13 +1,3 @@
-<header class="header" fxFlex="nogrow" fxLayout="row" fxLayoutAlign="space-between center">
-  <span class="header-text">Ментальная арифметика</span>
-  <span>
-    <span *ngIf="userService.isAuthorized()">
-      <span class="header-text">{{userService.fullUserName}}</span>
-      &nbsp;|&nbsp;
-      <span class="logout-link">Выйти</span>
-    </span>
-  </span>
-</header>
 <main class="main-section" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="1em">
   <section class="section" [class.not-in-focus]="appState !== 'config'">
     <header>
@@ -150,15 +140,3 @@
     </div>
   </section>
 </main>
-<footer class="bottom-section" fxLayout="row" fxLayoutAlign="space-around center">
-  <span class="funny-digit" style="color:red">0</span>
-  <span class="funny-digit" style="color:orange">1</span>
-  <span class="funny-digit" style="color:brown">2</span>
-  <span class="funny-digit" style="color:green">3</span>
-  <span class="funny-digit" style="color:blue">4</span>
-  <span class="funny-digit" style="color:darkblue">5</span>
-  <span class="funny-digit" style="color:purple">6</span>
-  <span class="funny-digit" style="color:brown">7</span>
-  <span class="funny-digit" style="color:blue">8</span>
-  <span class="funny-digit" style="color:red">9</span>
-</footer>
