@@ -1,3 +1,13 @@
+<header class="header" fxFlex="nogrow" fxLayout="row" fxLayoutAlign="space-between center">
+  <span class="header-text">Ментальная арифметика</span>
+  <span>
+    <span *ngIf="userService.isAuthorized()">
+      <span class="header-text">{{userService.fullUserName}}</span>
+      &nbsp;|&nbsp;
+      <span class="logout-link">Выйти</span>
+    </span>
+  </span>
+</header>
 <main class="main-section" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="1em">
   <section class="section" [class.not-in-focus]="appState !== 'config'">
     <header>
