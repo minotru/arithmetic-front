@@ -9,10 +9,10 @@ const baseUrl = environment.baseUrl;
 
 @Injectable()
 export class UserService {
-  private user: IUser;
+  private user: IUser = null;
 
   constructor(private http: HttpClient) {
-    this.user = {name: 'Иван', surname: 'Петров' } as IUser ;
+    this.login('user', 'user').subscribe();
   }
 
   getUser(): IUser {
@@ -27,6 +27,7 @@ export class UserService {
     return this.http.post<IUser>(
       `${baseUrl}/auth/login`,
       { login, password },
+      {withCredentials: true},
     ).pipe(
       tap(user => this.user = user),
     );
@@ -37,6 +38,9 @@ export class UserService {
   }
 
   get fullUserName(): string {
+    if (!this.user) {
+      return 'Unauthorized';
+    }
     return `${this.user.name} ${this.user.surname}`;
   }
 }

@@ -56,7 +56,7 @@ export class StudentPageComponent implements OnInit {
   topics: ITopic[] = TOPICS;
   speedValues: number[] = SPEED_VALUES;
   configForm: FormGroup;
-  task: ITask;
+  task: ITask = {} as ITask;
   currentOperationIndex = 0;
   timerId: number;
   appState: AppState;
@@ -112,7 +112,7 @@ export class StudentPageComponent implements OnInit {
     this.taskService
       .generateTask(taskConfig)
       .subscribe((task) => {
-        this.task = task;
+        this.task = Object.assign(this.task, task);
         this.runApp();
       });
   }
@@ -148,7 +148,7 @@ export class StudentPageComponent implements OnInit {
     window.setTimeout(() => {
       this.timerId = window.setInterval(
         () => this.onNextOperation(),
-        this.task.config.speed * 1000)
+        this.task.config.speed * 1000);
       },
       1000,
     );
@@ -173,14 +173,14 @@ export class StudentPageComponent implements OnInit {
   onAnswerInput() {
     const userAnswer = Number.parseInt(this.answerInput.value);
     this.taskService
-      .checkAnswer(userAnswer)
+      .checkAnswer(this.task.id, userAnswer)
       .subscribe((task => {
-        this.task = task;
+        this.task = Object.assign(this.task, task);
         this.answerInput.disabled = true;
-        if (task.isCorrect) {
+        if (this.task.isCorrect) {
           this.answerInput.classList.add('valid');
         } else {
-          this.answerInput.value = task.answer.toString();
+          this.answerInput.value = this.task.answer.toString();
           this.answerInput.classList.add('invalid');
         }
         this.appState = AppState.ANSWERED;

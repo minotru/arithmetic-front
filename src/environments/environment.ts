@@ -7,7 +7,7 @@ const baseUrl = 'http://localhost:3020';
 export const environment = {
   baseUrl,
   apiUrl: `${baseUrl}/api`,
-  production: false
+  production: false,
 };
 
 /*
