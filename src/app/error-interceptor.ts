@@ -10,9 +10,9 @@ export class ErrorInterceptor implements HttpInterceptor {
       .handle(req)
       .pipe(
         catchError((err: HttpErrorResponse) => {
-          // if (err && err.error && err.error.code) {
-          //   return throwError(err.error);
-          // }
+          if (err && err.error && err.error.error) {
+            return throwError(err.error);
+          }
           return throwError(err);
         }),
       );

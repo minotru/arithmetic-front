@@ -1,0 +1,35 @@
+@import '../common.scss';
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.login-form {
+  // border: 1px solid black;
+  background: white;
+  padding: 3em 3em;
+  border-radius: 1em;
+  // padding-top: 2em;
+  // margin: auto;
+}
+
+.login-button {
+  font-size: 1.5em;
+}
+
+.header {
+  border-bottom: 2px solid $text-accent;
+  color: $text-blue;
+  margin: 0;
+}
+
+.error {
+  color: red;
+}
+
+// label, input {
+//   font-size: larger;
+// }

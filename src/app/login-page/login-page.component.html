@@ -1,0 +1,23 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="login-form"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxLayoutGap="1em"
+> 
+  <h1 class="header">&nbsp;Вход&nbsp;</h1>
+  <div>
+    <label>Логин:&nbsp;
+      <input class="my-input" required type="text" formControlName="login">
+    </label>
+  </div>
+  <div>
+    <label>Пароль:&nbsp;
+      <input class="my-input" required type="password" formControlName="password">
+    </label>
+  </div>
+  <button type="submit" [disabled]="!form.valid" class="button login-button">Войти</button>
+  <span class="error" *ngIf="form.hasError('credentials')">Неправильный логин или пароль</span>
+  <span class="error" *ngIf="form.hasError('inactive')">Ваш доступ ограничен</span>
+</form>

@@ -12,7 +12,6 @@ export class UserService {
   private user: IUser = null;
 
   constructor(private http: HttpClient) {
-    this.login('user', 'user').subscribe();
   }
 
   getUser(): IUser {
