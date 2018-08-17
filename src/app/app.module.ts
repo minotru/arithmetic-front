@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { StudentPageComponent } from './student-page/student-page.component';
@@ -20,6 +21,7 @@ import { TaskEditorComponent } from './task-editor/task-editor.component';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -34,12 +36,14 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
     MatTableModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
   providers: [
     UserService,

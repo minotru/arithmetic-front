@@ -1,60 +1,64 @@
-<button mat-button>Добавить студента</button>
+<button mat-raised-button type="button" (click)="addStudent()">Добавить студента</button>
 
-<form [formGroup]="form">
-<table mat-table [dataSource]="form.controls">
+<table mat-table [dataSource]="data">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Имя</th>
-    <td mat-cell *matCellDef="let control">
-      {{control.get('name').value}}
+    <td mat-cell *matCellDef="let data">
+      {{data.student.name}}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="surname">
     <th mat-header-cell *matHeaderCellDef>Фамилия</th>
-    <td mat-cell *matCellDef="let control">
-      {{control.get('surname').value}}
+    <td mat-cell *matCellDef="let data">
+      {{data.student.surname}}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="login">
     <th mat-header-cell *matHeaderCellDef>Логин</th>
-    <td mat-cell *matCellDef="let control">
-      {{control.get('login').value}}
+    <td mat-cell *matCellDef="let data">
+      {{data.student.login}}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="password">
     <th mat-header-cell *matHeaderCellDef>Пароль</th>
-    <td mat-cell *matCellDef="let control">
-      {{control.get('password')?.value}}
+    <td mat-cell *matCellDef="let data">
+      {{data.student.password}}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="phoneNumber">
     <th mat-header-cell *matHeaderCellDef>Номер телефона</th>
-    <td mat-cell *matCellDef="let control">
-      {{control.get('phoneNumber').value }}
+    <td mat-cell *matCellDef="let data">
+      {{data.student.phoneNumber}}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="isActive">
     <th mat-header-cell *matHeaderCellDef>Активен</th>
-    <td mat-cell *matCellDef="let control">
-      {{control.get('isActive').value ? 'Да' : 'Нет'}}
+    <td mat-cell *matCellDef="let data">
+      {{data.student.isActive? 'Да' : 'Нет'}}
     </td>
   </ng-container>
 
    <ng-container matColumnDef="tools">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let control">
-      <button mat-icon-button><i class="material-icons">edit</i></button>
-      <button mat-icon-button><i class="material-icons">save</i></button>
-      <button mat-icon-button><i class="material-icons">clear</i></button>
+    <td mat-cell *matCellDef="let data; let i = index">
+      <button type="button" (click)="editStudent(i)" matTooltip="Редактировать" mat-icon-button *ngIf="!data.isEditing">
+        <i class="material-icons">edit</i>
+      </button>
+      <span *ngIf="data.isEditing">
+        <button matTooltip="Сохранить" mat-icon-button ><i class="material-icons">save</i></button>
+        <button (click)="deleteStudent(i)" matTooltip="Удалить" mat-icon-button>
+          <i class="material-icons">clear</i>
+        </button>
+      </span>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-</form>
