@@ -19,6 +19,10 @@ export class UserService {
     return this.user;
   }
 
+  getUserById(userId: string): Observable<IUser> {
+    return of(STUDENTS[0]);
+  }
+
   getStudents(): Observable<IUser[]> {
     return of(STUDENTS);
   }

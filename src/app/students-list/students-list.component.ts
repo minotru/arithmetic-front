@@ -4,11 +4,6 @@ import { STUDENTS } from '../mocks/students';
 import { IUser, UserRole } from '../interfaces';
 import { FormBuilder, FormArray } from '@angular/forms';
 
-interface RowData {
-  student: IUser;
-  isEditing: boolean;
-}
-
 const EMPTY_USER: IUser = {
   name: '',
   surname: '',
@@ -25,12 +20,12 @@ const EMPTY_USER: IUser = {
   styleUrls: ['./students-list.component.scss']
 })
 export class StudentsListComponent implements OnInit {
-  data: RowData[] = [];
+  students: IUser[] = [];
   displayedColumns: string[] = [
     'name',
     'surname',
     'login',
-    'password',
+    // 'password',
     'phoneNumber',
     'isActive',
     'tools',
@@ -39,42 +34,20 @@ export class StudentsListComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private fb: FormBuilder,
   ) { }
 
   ngOnInit() {
-    this.form = this.fb.array([]);
     this.userService
       .getStudents()
       .subscribe(
-        (students) => {
-          this.data = students.map(student => ({
-            student,
-            isEditing: false,
-          }));
-        this.data[0].isEditing = true;
-        }
-      );
-  }
-
-  deleteStudent(index: number) {
-    if (window.confirm('Вы уверены?')) {
-      this.data.splice(index, 1);
-      this.data = this.data.slice();
-    }
+        students => this.students = students,
+    );
   }
 
   addStudent() {
-    this.data.unshift({
-      isEditing: true,
-      student: Object.assign({}, EMPTY_USER),
-    });
-    this.data = this.data.slice();
   }
 
-  editStudent(index: number) {
-    this.data[index].isEditing = true;
-    this.data = this.data.slice();
+  editStudent(studentId: string) {
   }
 
 }

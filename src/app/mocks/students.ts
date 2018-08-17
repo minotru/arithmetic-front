@@ -9,6 +9,7 @@ export const STUDENTS: IUser[] = [
     phoneNumber: '+375291112233',
     role: UserRole.STUDENT,
     isActive: true,
+    password: 'lol-kek',
   },
   {
     id: '2',
@@ -18,6 +19,7 @@ export const STUDENTS: IUser[] = [
     phoneNumber: '+375445712913',
     role: UserRole.STUDENT,
     isActive: true,
+    password: 'abcdefg',
   },
   {
     id: '3',
@@ -27,5 +29,6 @@ export const STUDENTS: IUser[] = [
     phoneNumber: '+375444923409',
     role: UserRole.STUDENT,
     isActive: false,
+    password: 'qwerty123'
   },
 ];

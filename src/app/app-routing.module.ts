@@ -6,6 +6,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { StudentsListComponent } from './students-list/students-list.component';
 import { TaskEditorComponent } from './task-editor/task-editor.component';
+import { StudentEditorComponent } from './student-editor/student-editor.component';
 
 const routes: Routes = [
   {
@@ -32,7 +33,21 @@ const routes: Routes = [
       },
       {
         path: 'students',
-        component: StudentsListComponent,
+        children: [
+          {
+            path: 'edit',
+            component: StudentEditorComponent,
+          },
+          {
+            path: 'list',
+            component: StudentsListComponent,
+          },
+          {
+            path: '',
+            redirectTo: 'list',
+            pathMatch: 'full',
+          },
+        ],
       },
       {
         path: 'params',

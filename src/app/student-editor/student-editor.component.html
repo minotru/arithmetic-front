@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+  <div>
+    <mat-form-field style="margin-right: 1em;">
+      <input matInput type="text" placeholder="Логин" formControlName="login">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="password" placeholder="Пароль" formControlName="password">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field style="margin-right: 1em;">
+      <input matInput type="text" placeholder="Имя" formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="password" placeholder="Фамилия" formControlName="surname">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <input matInput type="tel" placeholder="Номер телефона" formControlName="phoneNumber">
+    </mat-form-field>
+  </div>
+</form>

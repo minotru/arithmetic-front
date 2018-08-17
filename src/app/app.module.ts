@@ -18,10 +18,13 @@ import { FooterComponent } from './footer/footer.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { StudentsListComponent } from './students-list/students-list.component';
 import { TaskEditorComponent } from './task-editor/task-editor.component';
+import { StudentEditorComponent } from './student-editor/student-editor.component';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AdminPageComponent,
     StudentsListComponent,
     TaskEditorComponent,
+    StudentEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +48,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTableModule,
     MatButtonModule,
     MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [
     UserService,
