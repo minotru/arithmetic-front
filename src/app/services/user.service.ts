@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { IUser } from '../interfaces/user';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
+import { STUDENTS } from '../mocks/students';
 
 const baseUrl = environment.baseUrl;
 
@@ -16,6 +17,10 @@ export class UserService {
 
   getUser(): IUser {
     return this.user;
+  }
+
+  getStudents(): Observable<IUser[]> {
+    return of(STUDENTS);
   }
 
   isAuthorized(): boolean {

@@ -14,6 +14,12 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CanActivateService } from './services/can-activate.service';
 import { FooterComponent } from './footer/footer.component';
+import { AdminPageComponent } from './admin-page/admin-page.component';
+import { StudentsListComponent } from './students-list/students-list.component';
+import { TaskEditorComponent } from './task-editor/task-editor.component';
+
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -22,6 +28,9 @@ import { FooterComponent } from './footer/footer.component';
     HeaderComponent,
     LoginPageComponent,
     FooterComponent,
+    AdminPageComponent,
+    StudentsListComponent,
+    TaskEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,6 +38,8 @@ import { FooterComponent } from './footer/footer.component';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
+    MatTableModule,
+    MatButtonModule,
   ],
   providers: [
     UserService,

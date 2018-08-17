@@ -1,0 +1,35 @@
+@import '../common.scss';
+
+:host {
+  display: flex;
+  flex: 1;
+  margin: 1em;
+}
+
+.nav {
+  margin-right: 1em;
+}
+
+.nav-item {
+  padding: 1em;
+  border-bottom: 1px solid $bk;
+}
+
+.nav-item:focus {
+  outline: none;
+}
+
+.nav-item:first-child {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+
+.nav-item:hover, .nav-item--active {
+  box-shadow: $material-shadow;
+  // background: $mild;
+  // color: $text-blue;
+}
+
+.main {
+  flex: 1;
+}
