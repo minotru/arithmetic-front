@@ -7,12 +7,14 @@ import { tap } from 'rxjs/operators';
 import { STUDENTS } from '../mocks/students';
 
 const baseUrl = environment.baseUrl;
+const apiUrl = `${baseUrl}/api`;
 
 @Injectable()
 export class UserService {
   private user: IUser = null;
 
   constructor(private http: HttpClient) {
+    this.login('test', 'test').subscribe(() => {});
   }
 
   getUser(): IUser {
@@ -24,11 +26,20 @@ export class UserService {
   }
 
   getStudents(): Observable<IUser[]> {
-    return of(STUDENTS);
+    // return of(STUDENTS);
+    return this.http.get<IUser[]>(`${apiUrl}/admin/users`);
   }
 
   isAuthorized(): boolean {
     return this.user !== null;
+  }
+
+  editUser(userId: string, data: IUser): Observable<IUser> {
+    return this.http.put<IUser>(`${apiUrl}/admin/users/${userId}`, data);
+  }
+
+  createUser(data: IUser): Observable<IUser> {
+    return this.http.post<IUser>(`${apiUrl}/admin/users`, data);
   }
 
   login(login: string, password: string): Observable<IUser> {

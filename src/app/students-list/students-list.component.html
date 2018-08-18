@@ -49,8 +49,11 @@
    <ng-container matColumnDef="tools">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let student">
-      <button type="button" (click)="editStudent(student.id)" matTooltip="Редактировать" mat-icon-button>
+      <button type="button" (click)="editStudent(student)" matTooltip="Редактировать" mat-icon-button>
         <i class="material-icons">edit</i>
+      </button>
+      <button type="button" (click)="openTasksHistory(student)" matTooltip="История занятий" mat-icon-button>
+        <i class="material-icons">list</i>
       </button>
     </td>
   </ng-container>

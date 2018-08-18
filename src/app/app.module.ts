@@ -20,11 +20,17 @@ import { StudentsListComponent } from './students-list/students-list.component';
 import { TaskEditorComponent } from './task-editor/task-editor.component';
 import { StudentEditorComponent } from './student-editor/student-editor.component';
 
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import {
+  MatCheckboxModule,
+  MatInputModule,
+  MatFormFieldModule,
+  MatTooltipModule,
+  MatButtonModule,
+  MatTableModule,
+  MatDialogModule,
+} from '@angular/material';
+import { HeadersInterceptor } from './headers-interceptor';
+import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +43,7 @@ import { MatInputModule } from '@angular/material/input';
     StudentsListComponent,
     TaskEditorComponent,
     StudentEditorComponent,
+    TasksHistoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +57,8 @@ import { MatInputModule } from '@angular/material/input';
     MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
+    MatDialogModule,
   ],
   providers: [
     UserService,
@@ -58,6 +67,11 @@ import { MatInputModule } from '@angular/material/input';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HeadersInterceptor,
       multi: true,
     },
   ],

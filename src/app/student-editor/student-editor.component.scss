@@ -1,3 +1,15 @@
 form {
   padding: 1em;
+  // display: flex;
+  // flex-direction: column;
+  display: inline-block;
+}
+
+
+.form-row > * {
+  margin-right: 1em;
+}
+
+.form-row > *:last-child {
+  margin-right: 0;
 }

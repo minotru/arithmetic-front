@@ -3,6 +3,8 @@ import { UserService } from '../services/user.service';
 import { STUDENTS } from '../mocks/students';
 import { IUser, UserRole } from '../interfaces';
 import { FormBuilder, FormArray } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { StudentEditorComponent } from '../student-editor/student-editor.component';
 
 const EMPTY_USER: IUser = {
   name: '',
@@ -34,6 +36,7 @@ export class StudentsListComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -45,9 +48,29 @@ export class StudentsListComponent implements OnInit {
   }
 
   addStudent() {
+    const dialogRef = this.dialog.open(StudentEditorComponent);
+    dialogRef.afterClosed()
+      .subscribe((user) => {
+        if (user) {
+          this.students.unshift(user);
+          this.students = this.students.slice();
+        }
+      });
   }
 
-  editStudent(studentId: string) {
+  editStudent(student: IUser) {
+    const dialogRef = this.dialog.open(
+      StudentEditorComponent,
+      { data: student },
+    );
+    dialogRef.afterClosed()
+      .subscribe((user) => {
+        if (user) {
+          const ind = this.students.findIndex(u => u.id === user.id);
+          this.students.splice(ind, 1, user);
+          this.students = this.students.slice();
+        }
+      });
   }
 
 }
