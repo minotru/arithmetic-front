@@ -18,6 +18,7 @@ const routes: Routes = [
   {
     path: 'student',
     component: StudentPageComponent,
+    canActivate: [CanActivateService],
   },
   {
     path: 'login',
@@ -26,6 +27,7 @@ const routes: Routes = [
   {
     path: 'teacher',
     component: AdminPageComponent,
+    canActivate: [CanActivateService],
     children: [
        {
         path: '',
