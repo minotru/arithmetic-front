@@ -22,7 +22,8 @@ export class UserService {
   }
 
   getUserById(userId: string): Observable<IUser> {
-    return of(STUDENTS[0]);
+    // return of(STUDENTS[0]);
+    return this.http.get<IUser>(`${apiUrl}/admin/users/${userId}`);
   }
 
   getStudents(): Observable<IUser[]> {

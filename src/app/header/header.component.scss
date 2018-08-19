@@ -1,11 +1,18 @@
 @import '../common.scss';
 
+:host {
+  margin-bottom: 2em;
+}
+
 .header {
   padding: 0.25em 0.5em;
   background: white;
   color: $text-blue;
   font-size: larger;
   font-weight: bolder;
+  border-bottom: 2px solid $text-blue;
+  width: 100%;
+  position: fixed;
 }
 
 .header-text {

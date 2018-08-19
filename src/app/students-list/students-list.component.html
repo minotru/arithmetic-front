@@ -52,7 +52,7 @@
       <button type="button" (click)="editStudent(student)" matTooltip="Редактировать" mat-icon-button>
         <i class="material-icons">edit</i>
       </button>
-      <button type="button" (click)="openTasksHistory(student)" matTooltip="История занятий" mat-icon-button>
+      <button type="button" [routerLink]="'../../history/' + student.id" matTooltip="История занятий" mat-icon-button>
         <i class="material-icons">list</i>
       </button>
     </td>

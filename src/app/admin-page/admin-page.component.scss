@@ -8,6 +8,7 @@
 
 .nav {
   margin-right: 1em;
+  display: flex;
 }
 
 .nav-item {
@@ -32,4 +33,12 @@
 
 .main {
   flex: 1;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.hidden {
+  visibility: hidden;
 }

@@ -7,6 +7,7 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
 import { StudentsListComponent } from './students-list/students-list.component';
 import { TaskEditorComponent } from './task-editor/task-editor.component';
 import { StudentEditorComponent } from './student-editor/student-editor.component';
+import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
             pathMatch: 'full',
           },
         ],
+      },
+      {
+        path: 'history/:studentId',
+        component: TasksHistoryComponent,
       },
       {
         path: 'params',

@@ -13,12 +13,12 @@ export interface IOperation {
 
 export interface ITask {
   id: string;
-  userId?: string;
+  userId: string;
   config: ITaskConfig;
   answer?: number;
   isCorrect?: boolean;
-  createdAt?: Date;
-  operations: IOperation[];
+  date?: Date;
+  operations?: IOperation[];
 }
 
 export enum OperationType {

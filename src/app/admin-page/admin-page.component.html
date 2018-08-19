@@ -1,9 +1,11 @@
-<nav class="nav card" fxFlex="nogrow">
-  <div class="nav-item" routerLink="students" routerLinkActive="nav-item--active">
-    Студенты
-  </div>
-  <div class="nav-item" routerLink="params" routerLinkActive="nav-item--active">
-    Параметры примеров
+<nav class="nav card" fxFlex="none" *ngFor="let i of [1, 2]" [ngClass]="{'fixed': i === 1, 'hidden': i === 2}">
+  <div>
+    <div class="nav-item" routerLink="students" routerLinkActive="nav-item--active">
+      Студенты
+    </div>
+    <div class="nav-item" routerLink="params" routerLinkActive="nav-item--active">
+      Параметры примеров
+    </div>
   </div>
 </nav>
 <main class="main card">
