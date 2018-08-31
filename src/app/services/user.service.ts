@@ -14,7 +14,9 @@ export class UserService {
   private user: IUser = null;
 
   constructor(private http: HttpClient) {
-    // this.login('test', 'test').subscribe(() => {});
+    if (window.sessionStorage.getItem('user')) {
+      this.user = JSON.parse(window.sessionStorage.getItem('user'));
+    }
   }
 
   getUser(): IUser {
@@ -47,14 +49,22 @@ export class UserService {
     return this.http.post<IUser>(
       `${baseUrl}/auth/login`,
       { login, password },
-      {withCredentials: true},
+      { withCredentials: true },
     ).pipe(
-      tap(user => this.user = user),
+      tap((user) => {
+        this.user = user;
+        window.sessionStorage.setItem('user', JSON.stringify(this.user));
+      }),
     );
   }
 
   logout(): Observable<void> {
-    return this.http.get<any>(`${baseUrl}/auth/logout`).pipe(tap(() => this.user = null));
+    return this.http
+      .get<any>(`${baseUrl}/auth/logout`)
+      .pipe(tap(() => {
+        this.user = null;
+        window.sessionStorage.removeItem('user');
+      }));
   }
 
   get fullUserName(): string {

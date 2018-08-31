@@ -19,7 +19,6 @@ export class CanActivateService implements CanActivate {
         map(() => true),
       );
     }
-    // if (route.url.find(url => ))
     if (route.url.find(url => url.path === 'student' &&
       this.userService.isAuthorized())
     ) {
