@@ -4,6 +4,7 @@ export interface ITaskConfig {
   level: number;
   operationsCnt: number;
   speed: number;
+  withRemainder: boolean;
 }
 
 export interface IOperation {
@@ -37,8 +38,31 @@ export enum TopicName {
   DIVISION = 'division',
 }
 
+export enum RestrictionsType {
+  ALLOWED = 'allowed',
+  FORBIDDEN = 'forbidden',
+}
+
+export interface ILevel {
+  [operation: string]: {
+    [leftValue: string]: {
+      restrictionsType: RestrictionsType,
+      restrictions: string[],
+    },
+  };
+}
+
 export interface ITopic {
+  [levelName: string]: ILevel;
+}
+
+export interface IGameMap {
+  [topic: string]: ITopic;
+}
+
+export interface ITopicPreview {
   name: string;
   caption: string;
   levels: string[];
 }
+

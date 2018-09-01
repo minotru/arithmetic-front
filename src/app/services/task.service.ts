@@ -6,7 +6,6 @@ import { OPERATIONS } from '../mocks/operations';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
-
 const ADMIN_TASKS = `${environment.apiUrl}/admin/tasks`;
 const STUDENT_TASKS = `${environment.apiUrl}/student/tasks`;
 

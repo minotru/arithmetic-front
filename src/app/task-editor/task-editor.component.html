@@ -1,3 +1,5 @@
-<p>
-  admin-page-task-params works!
-</p>
+<form [formGroup]="form">
+  <section *ngFor="let topic of topics; let i = index">
+    {{topic.caption}}
+  </section>
+</form>

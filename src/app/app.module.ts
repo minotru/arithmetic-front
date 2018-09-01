@@ -31,6 +31,7 @@ import {
 } from '@angular/material';
 import { HeadersInterceptor } from './headers-interceptor';
 import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
+import { MapService } from './services/map.service';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
   providers: [
     UserService,
     TaskService,
+    MapService,
     CanActivateService,
     {
       provide: HTTP_INTERCEPTORS,

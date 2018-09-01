@@ -12,7 +12,7 @@
 }
 
 .enter-answer-button {
-  max-width: 50%;
+  // max-width: 50%;
   // flex: 0 1 auto;
 }
 
@@ -60,7 +60,7 @@
   font-weight: bolder;
 }
 
-.level.selected {
+.level.selected, .topic-name.selected {
   background: red;
   color: white;
   font-weight: bolder;
@@ -93,6 +93,14 @@
   color: #FF8C77;
 }
 
+// .my-checkbox {
+//   position: relative;
+//   width: 1em;
+//   height: 1em;
+//   border-bottom: 1px dashed black;
+//   display: inline-block;
+// }
+
 .params-digits-icon:hover {
   cursor: pointer;
 }
@@ -116,6 +124,8 @@
 
 .task-section {
   flex: 1;
+  // flex-shrink: 0;
+  margin-right: 1em;
   overflow: auto;
 }
 

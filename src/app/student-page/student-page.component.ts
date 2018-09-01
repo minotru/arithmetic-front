@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { TopicName, ITopic, IOperation, OperationType, ITaskConfig, ITask } from '../interfaces/task';
+import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn } from '@angular/forms';
+import { TopicName, IOperation, OperationType, ITaskConfig, ITask, ITopicPreview } from '../interfaces/task';
 import { UserService } from '../services/user.service';
-import { OPERATIONS } from '../mocks/operations';
 import { TaskService } from '../services/task.service';
+import { ALL_TOPICS } from '../topics';
 
 const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.7,
@@ -16,36 +16,14 @@ enum AppState {
   ANSWERED = 'answered',
 }
 
-const DEFAULT_TASK_CONFIG: ITaskConfig =  {
+const DEFAULT_TASK_CONFIG: ITaskConfig = {
   speed: null,
   topic: null,
   level: null,
   digitsCnt: 2,
   operationsCnt: null,
+  withRemainder: false,
 };
-
-const TOPICS: ITopic[] = [
-  {
-    name: TopicName.SIMPLE,
-    caption: 'ПРОСТО',
-    levels: ['2', '3', '4', '5', '6', '7', '8', '9'],
-  },
-  {
-    name: TopicName.BROTHER,
-    caption: 'БРАТ',
-    levels: ['4', '3', '2', '1'],
-  },
-  {
-    name: TopicName.FRIEND,
-    caption: 'ДРУГ',
-    levels: ['9', '8', '7', '6', '5', '4', '3', '2', '1'],
-  },
-  {
-    name: TopicName.FRIEND_AND_BROTHER,
-    caption: 'ДРУГ+БРАТ',
-    levels: ['6', '7', '8', '9'],
-  },
-];
 
 @Component({
   selector: 'app-student-page',
@@ -53,7 +31,7 @@ const TOPICS: ITopic[] = [
   styleUrls: ['./student-page.component.scss']
 })
 export class StudentPageComponent implements OnInit {
-  topics: ITopic[] = TOPICS;
+  topics: ITopicPreview[] = ALL_TOPICS;
   speedValues: number[] = SPEED_VALUES;
   configForm: FormGroup;
   task: ITask = {} as ITask;
@@ -67,18 +45,59 @@ export class StudentPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.configForm = this.fb.group({
-      speed: [0.3, Validators.required],
-      topic: ['', Validators.required],
-      level: ['', Validators.required],
-      digitsCnt: [2, Validators.required],
-      operationsCnt: ['', Validators.required],
+      speed: [0.3],
+      topic: [''],
+      level: [''],
+      digitsCnt: [2],
+      operationsCnt: [''],
+      withRemainder: [false],
     });
+    this.setPlusMinusValidators();
     this.appState = AppState.CONFIG;
     // this.onStart();
+  }
+
+  private setDivisionValidators() {
+    this.configForm.controls['speed']
+      .clearValidators();
+    this.configForm.controls['digitsCnt']
+      .clearValidators();
+    this.configForm.controls['operationsCnt']
+      .clearValidators();
+    this.configForm.controls['withRemainder']
+      .setValidators(Validators.required);
+  }
+
+  private setPlusMinusValidators() {
+    this.configForm.controls['speed']
+      .setValidators(Validators.required);
+    this.configForm.controls['digitsCnt']
+      .setValidators(Validators.required);
+    this.configForm.controls['operationsCnt']
+      .setValidators(Validators.required);
+    this.configForm.controls['withRemainder']
+      .clearValidators();
+
+  }
+
+  private setMultiplicationValidators() {
+    this.setDivisionValidators();
+    this.configForm.controls['withRemainder']
+      .clearValidators();
+  }
+
+  isPlusMinusTopic(): boolean {
+    const topic: TopicName = this.configForm.value['topic'];
+    return topic !== TopicName.MULTIPLICATION &&
+      topic !== TopicName.DIVISION;
+  }
+
+  isDivisionTopic(): boolean {
+    return this.configForm.value['topic'] === TopicName.DIVISION;
   }
 
   selectLevel(newTopic: string, newLevel: string) {
@@ -97,6 +116,16 @@ export class StudentPageComponent implements OnInit {
         level: newLevel,
       });
     }
+
+    if (this.isPlusMinusTopic()) {
+      this.setPlusMinusValidators();
+    } else if (this.isDivisionTopic()) {
+      this.setDivisionValidators();
+    } else {
+      this.setMultiplicationValidators();
+    }
+    Object.values(this.configForm.controls).forEach(c => c.updateValueAndValidity());
+    this.configForm.updateValueAndValidity();
   }
 
   setDigitsCnt(cnt: number) {
@@ -148,7 +177,7 @@ export class StudentPageComponent implements OnInit {
       this.timerId = window.setInterval(
         () => this.onNextOperation(),
         this.task.config.speed * 1000);
-      },
+    },
       1000,
     );
   }

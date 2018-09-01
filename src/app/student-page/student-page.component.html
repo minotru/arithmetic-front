@@ -1,4 +1,9 @@
-<main class="main-section" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="1em">
+<main
+  class="main-section"
+  fxLayout="row"
+  fxLayoutAlign="center"
+  fxLayoutGap="1em"
+>
   <section class="section" [class.not-in-focus]="appState !== 'config'">
     <header>
       <h1 class="section-header-text">ТЕМЫ</h1>
@@ -12,6 +17,8 @@
          <div
            class="topic-name"
            [class.selected]="topic.name === configForm.value['topic']"
+           fxFlex
+           (click)="topic.levels.length || selectLevel(topic.name, null)"
           >
             {{topic.caption}}
           </div>
@@ -35,7 +42,6 @@
       <h1 class="section-header-text">ПРИМЕР</h1>
     </header>
     <div class="section-content" fxLayout="column" fxLayoutAlign="space-between center" style="height: 100%;">
-      <!-- <span *ngIf="appState === 'enter_answer'">Введите ответ</span> -->
       <div class="task" *ngIf="appState !== 'config'">
         <span *ngIf="appState === 'running'">
           {{currentOperationString}}
@@ -80,12 +86,17 @@
       </div>
     </div>
   </section>
-  <section class="section" [class.not-in-focus]="appState !== 'config'" fxFlex="none">
+
+  <section
+    class="section"
+    [class.not-in-focus]="appState !== 'config'"
+    fxFlex="none"
+  >
     <header>
       <h1 class="section-header-text">УСТАНОВКА ПАРАМЕТРОВ</h1>
     </header>
     <div class="params" fxLayout="column" fxLayoutGap="1em">
-      <div class="params-digits" fxLayout="row" fxLayoutAlign="start center">
+      <div class="params-digits" *ngIf="isPlusMinusTopic()" fxLayout="row" fxLayoutAlign="start center">
         Разряды:
         &nbsp;
         <i class="material-icons params-digits-icon" (click)="setDigitsCnt(1)" title="Однозначные">
@@ -99,7 +110,7 @@
           {{configForm.value['digitsCnt'] >= 3 ? 'star' : 'star_border'}}
         </i>
       </div>
-      <div class="params-speed">
+      <div class="params-speed" *ngIf="isPlusMinusTopic()">
         Скорость:
         <input
           id="speed"
@@ -117,7 +128,7 @@
           <option *ngFor="let opt of speedValues" [value]="opt">
         </datalist>
       </div>
-      <div class="operations-cnt">
+      <div class="operations-cnt" *ngIf="isPlusMinusTopic()">
         Количество действий:
         <input
           class="my-input"
@@ -128,15 +139,22 @@
           [formControl]="configForm.get('operationsCnt')"
         >
       </div>
-      <button
-        type="button"
-        (click)="onStart()"
-        [disabled]="!configForm.valid"
-        class="button start-button"
-        *ngIf="appState === 'config'"
-      >
-        Начать
-      </button>
+      <div class="withRemainder" *ngIf="isDivisionTopic()">
+        С остатком
+        <input
+          type="checkbox"
+          [formControl]="configForm.controls['withRemainder']"
+        >
+      </div>
+    <button
+      type="button"
+      (click)="onStart()"
+      [disabled]="!configForm.valid"
+      class="button start-button"
+      *ngIf="appState === 'config'"
+    >
+      Начать
+    </button>
     </div>
   </section>
 </main>
