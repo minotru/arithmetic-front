@@ -28,6 +28,11 @@ import {
   MatButtonModule,
   MatTableModule,
   MatDialogModule,
+  MatDividerModule,
+  MatCardModule,
+  MatListModule,
+  MatSelectModule,
+  MatChipsModule,
 } from '@angular/material';
 import { HeadersInterceptor } from './headers-interceptor';
 import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
@@ -60,6 +65,11 @@ import { MapService } from './services/map.service';
     MatInputModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatDividerModule,
+    MatCardModule,
+    MatListModule,
+    MatSelectModule,
+    MatChipsModule,
   ],
   providers: [
     UserService,

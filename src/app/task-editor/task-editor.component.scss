@@ -1,0 +1,19 @@
+@import '../common.scss';
+
+.topic-name {
+  font-size: larger;
+  font-weight: bolder;
+}
+
+.topic-card {
+  margin-bottom: 1em;
+}
+
+mat-form-field.mat-form-field {
+  width: auto;
+}
+
+.restrictions {
+  padding-left: 1em;
+  border-left: 2px solid $text-blue;
+}
