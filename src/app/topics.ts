@@ -17,7 +17,7 @@ export const TOPICS: ITopicPreview[] = [
     levels: ['9', '8', '7', '6', '5', '4', '3', '2', '1'],
   },
   {
-    name: TopicName.FRIEND_AND_BROTHER,
+    name: TopicName.FRIEND_PLUS_BROTHER,
     caption: 'ДРУГ+БРАТ',
     levels: ['6', '7', '8', '9'],
   },

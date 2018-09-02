@@ -146,7 +146,13 @@ export class StudentPageComponent implements OnInit {
   }
 
   operationToString(operation: IOperation): string {
-    return `${operation.operationType}${operation.operand}`;
+    const opMap: any = {
+      [OperationType.PLUS]: '+',
+      [OperationType.MINUS]: '-',
+      [OperationType.MULTIPLY]: '*',
+      [OperationType.DIVIDE]: '/',
+    };
+    return `${opMap[operation.operationType]}${operation.operand}`;
   }
 
   get currentOperationString(): string {

@@ -17,6 +17,7 @@
       <mat-select
         placeholder="Уровень"
         formControlName="level"
+        (selectionChange)="onSelectLevel()"
       >
         <mat-option
           *ngFor="let level of levels"
@@ -27,25 +28,38 @@
       </mat-select>
     </mat-form-field>
   </header>
-  <mat-divider></mat-divider>
+  <!-- <mat-divider></mat-divider> -->
   <section>
-    Вычитание,&nbsp;
-    <mat-form-field> 
-      <mat-select
-      >
-        <mat-option value="allowed">
-          можно
-        </mat-option>
-        <mat-option value="forbidden">
-          нельзя
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div class="restrictions">
-      <div>
+    <header class="section-header"> 
+      <mat-form-field>
+        <mat-select
+          formControlName="operation"
+          placeholder="Операция"
+        >
+          <mat-option value="plus">Сложение</mat-option>
+          <mat-option value="minus">Вычитание</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field> 
+        <mat-select
+          placeholder="Правила вида"
+          formControlName="rulesType"
+        >
+          <mat-option value="allowed">
+            Можно
+          </mat-option>
+          <mat-option value="forbidden">
+            Нельзя
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button>Добавить правило</button>
+    </header>
+    <div class="restrictions" formArrayName="rules">
+      <div *ngFor="let rule of ruleControls.value">
         От&nbsp;
         <mat-form-field style="width: 4em; text-align: center;">
-          <input matInput type="number" min="1" max="9999" >
+          <input matInput type="number" min="1" max="9999" [value]="rule.value">
         </mat-form-field>:
         <span *ngIf="!isEditing">
           <button
@@ -63,6 +77,9 @@
           </button>
           <button mat-icon-button type="button" (click)="closeWithoutSave()">
            <i class="material-icons" matTooltip="Не сохранять">done</i>
+          </button>
+          <button mat-icon-button type="button" (click)="remove()">
+           <i class="material-icons" matTooltip="Удалить">close</i>
           </button>
         </span>
       </div>

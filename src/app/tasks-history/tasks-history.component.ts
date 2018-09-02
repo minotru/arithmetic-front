@@ -48,7 +48,7 @@ export class TasksHistoryComponent implements OnInit {
         return 'брат';
       case TopicName.FRIEND:
         return 'друг';
-      case TopicName.FRIEND_AND_BROTHER:
+      case TopicName.FRIEND_PLUS_BROTHER:
         return 'друг+брат';
       case TopicName.MULTIPLICATION:
         return 'умножение';

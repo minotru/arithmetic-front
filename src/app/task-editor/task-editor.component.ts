@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IGameMap, TopicName } from '../interfaces';
+import { IGameMap, TopicName, OperationType, RulesType, ILevel, IRule, IRulesByOperation } from '../interfaces';
 import { MapService } from '../services/map.service';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, FormArray, Validators } from '@angular/forms';
 import { TOPICS } from '../topics';
+import { MatSelectChange } from '@angular/material';
+
 
 @Component({
   selector: 'app-task-editor',
@@ -10,7 +12,7 @@ import { TOPICS } from '../topics';
   styleUrls: ['./task-editor.component.scss']
 })
 export class TaskEditorComponent implements OnInit {
-  map: IGameMap = null;
+  level: ILevel;
   form: FormGroup;
   topics = TOPICS;
   isEditing: boolean;
@@ -23,10 +25,13 @@ export class TaskEditorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.mapService.getMap().subscribe(map => this.map = map);
+    // this.mapService.getMap().subscribe(map => this.map = map);
     this.form = this.fb.group({
       topic: [''],
       level: [''],
+      operation: ['minus'],
+      rules: this.fb.array([]),
+      rulesType: [RulesType.ALLOWED],
     });
     this.textareaControl = this.fb.control('');
     this.isEditing = false;
@@ -41,6 +46,13 @@ export class TaskEditorComponent implements OnInit {
       ).levels;
     }
     return [];
+  }
+
+  addRule(rule: IRule = {
+    value: undefined,
+    ranges: [],
+  }) {
+   this.ruleControls.push(this.fb.control(rule));
   }
 
   textToRanges(rawText: string): {
@@ -73,6 +85,17 @@ export class TaskEditorComponent implements OnInit {
     return { ranges, badRanges };
   }
 
+  onSelectLevel() {
+    const topicName = this.form.value['topic'];
+    const levelName = this.form.value['level'];
+    this.mapService
+      .getLevel(topicName, levelName)
+      .subscribe((level) => {
+        this.level = level;
+        this.loadRules();
+      });
+  }
+
   isRangeInput(symbol: string): boolean {
     return symbol >= '0' && symbol <= '9' ||
       [' ', ',', '-'].includes(symbol);
@@ -95,5 +118,34 @@ export class TaskEditorComponent implements OnInit {
       this.ranges = ranges;
       this.isEditing = false;
     }
+  }
+
+  setOperation() {
+  }
+
+  clearRules() {
+    this.form.controls['rules'].reset([]);
+  }
+
+  loadRules() {
+    this.clearRules();
+    const operation = <OperationType>this.form.value['operation'];
+    let rulesByOperation: IRulesByOperation;
+    if (operation === OperationType.PLUS) {
+      rulesByOperation = this.level.plus;
+    } else {
+      rulesByOperation = this.level.minus;
+    }
+    this.form.patchValue({
+      rulesType: rulesByOperation.rulesType,
+    });
+    console.log('before');
+    rulesByOperation.rules.forEach(
+      rule => this.ruleControls.push(this.fb.group(rule))
+    );
+  }
+
+  get ruleControls(): FormArray {
+    return this.form.controls['rules'] as FormArray;
   }
 }
