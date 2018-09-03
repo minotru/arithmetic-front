@@ -16,8 +16,6 @@ export class TaskEditorComponent implements OnInit {
   form: FormGroup;
   topics = TOPICS;
   isEditing: boolean;
-  textareaControl: FormControl;
-  ranges: string[];
 
   constructor(
     private mapService: MapService,
@@ -33,9 +31,7 @@ export class TaskEditorComponent implements OnInit {
       rules: this.fb.array([]),
       rulesType: [RulesType.ALLOWED],
     });
-    this.textareaControl = this.fb.control('');
     this.isEditing = false;
-    this.ranges = [];
   }
 
   get levels(): string[] {
@@ -52,7 +48,11 @@ export class TaskEditorComponent implements OnInit {
     value: undefined,
     ranges: [],
   }) {
-   this.ruleControls.push(this.fb.control(rule));
+    this.ruleControls.push(this.fb.group({
+      value: [rule.value],
+      ranges: [rule.ranges],
+      isEditing: false,
+    }));
   }
 
   textToRanges(rawText: string): {
@@ -101,30 +101,47 @@ export class TaskEditorComponent implements OnInit {
       [' ', ',', '-'].includes(symbol);
   }
 
-  edit() {
-    this.isEditing = true;
+  edit(ind: number) {
+    this.ruleControls.get([ind]).patchValue({ isEditing: true });
   }
 
-  closeWithoutSave() {
-    this.isEditing = false;
-  }
-
-  save() {
-    const text: string = this.textareaControl.value;
-    const { ranges, badRanges } = this.textToRanges(text);
+  finishEditing(ind: number) {
+    if (Array.isArray(this.ruleControls.get([ind, 'ranges']).value)) {
+      return this.form.get(['rules', ind]).patchValue({
+        isEditing: false,
+      });
+    }
+    const rangesText = this.form.value.rules[ind].ranges;
+    const { ranges, badRanges } = this.textToRanges(rangesText);
     if (badRanges.length) {
-      this.textareaControl.setErrors({ badRanges });
+      this.ruleControls.controls[ind].setErrors({ badRanges });
+      this.ruleControls.get([ind, 'ranges']).setErrors({ badRanges });
     } else {
-      this.ranges = ranges;
-      this.isEditing = false;
+      this.ruleControls.get([ind]).patchValue({
+        ranges,
+        isEditing: false,
+      });
     }
   }
 
-  setOperation() {
+  clearRules() {
+    while (this.ruleControls.controls.length) {
+      this.ruleControls.removeAt(0);
+    }
   }
 
-  clearRules() {
-    this.form.controls['rules'].reset([]);
+  saveChanges() {
+    const level: ILevel = Object.assign({}, this.level);
+    const section = this.form.value['operation'] === 'plus' ? level.plus : level.minus;
+    section.rules = this.form.value['rules'];
+    section.rulesType = this.form.valid['rulesType'];
+    const levelName = this.form.value['level'];
+    const topicName = this.form.value['topic'];
+    this.mapService
+      .updateMap(topicName, levelName, level)
+      .subscribe(newLevel => {
+        this.level = newLevel;
+      });
   }
 
   loadRules() {
@@ -139,13 +156,18 @@ export class TaskEditorComponent implements OnInit {
     this.form.patchValue({
       rulesType: rulesByOperation.rulesType,
     });
-    console.log('before');
     rulesByOperation.rules.forEach(
-      rule => this.ruleControls.push(this.fb.group(rule))
+      rule => this.addRule(rule)
     );
   }
 
   get ruleControls(): FormArray {
-    return this.form.controls['rules'] as FormArray;
+    return this.form.get('rules') as FormArray;
+  }
+
+  removeRule(ind: number) {
+    if (window.confirm('Вы уверены?')) {
+      this.ruleControls.removeAt(ind);
+    }
   }
 }

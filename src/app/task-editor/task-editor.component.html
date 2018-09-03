@@ -28,12 +28,12 @@
       </mat-select>
     </mat-form-field>
   </header>
-  <!-- <mat-divider></mat-divider> -->
   <section>
     <header class="section-header"> 
       <mat-form-field>
         <mat-select
           formControlName="operation"
+          (selectionChange)="loadRules()"
           placeholder="Операция"
         >
           <mat-option value="plus">Сложение</mat-option>
@@ -53,79 +53,83 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-raised-button>Добавить правило</button>
     </header>
-    <div class="restrictions" formArrayName="rules">
-      <div *ngFor="let rule of ruleControls.value">
-        От&nbsp;
-        <mat-form-field style="width: 4em; text-align: center;">
-          <input matInput type="number" min="1" max="9999" [value]="rule.value">
-        </mat-form-field>:
-        <span *ngIf="!isEditing">
-          <button
-            mat-icon-button
-            type="button"
-            matTooltip="Редактировать"
-            (click)="edit()"
-          >
-            <i class="material-icons">edit</i>
+    <button 
+      mat-raised-button
+      type="button"
+      (click)="addRule()"
+      style="margin-right:1em;"
+    >
+      Добавить правило
+    </button>
+    <button 
+      mat-raised-button
+      type="button"
+      (click)="saveChanges()"
+      [disabled]="!form.valid"
+    >
+      Сохранить изменения
+    </button>
+    <div class="rules" *ngIf="form.get('level').value" formArrayName="rules">
+      <span *ngIf="!form.get('rules').value.length">
+        На данный момент нет правил. Добавьте их.
+      </span>
+      <div
+        *ngFor="let control of ruleControls.controls; let i = index"
+        [formGroupName]="i"
+        class="rule"
+      >
+        <div>
+          Значение:&nbsp;
+          <mat-form-field style="width: 4em; text-align: center;">
+            <input
+              matInput
+              type="number"
+              min="1"
+              max="9999" 
+              formControlName="value"
+            >
+          </mat-form-field>:
+          <span *ngIf="!control.value['isEditing']">
+            <button
+              mat-icon-button
+              type="button"
+              matTooltip="Редактировать"
+              (click)="edit(i)"
+            >
+              <i class="material-icons">edit</i>
+            </button>
+          </span>
+          <span *ngIf="control.value['isEditing']">
+          <button mat-icon-button type="button" (click)="finishEditing(i)">
+           <i class="material-icons" matTooltip="Сохранить">done</i>
           </button>
-        </span>
-        <span *ngIf="isEditing">
-         <button mat-icon-button type="button" (click)="save()">
-           <i class="material-icons" matTooltip="Сохранить">save</i>
-          </button>
-          <button mat-icon-button type="button" (click)="closeWithoutSave()">
-           <i class="material-icons" matTooltip="Не сохранять">done</i>
-          </button>
-          <button mat-icon-button type="button" (click)="remove()">
+          <button mat-icon-button type="button" (click)="removeRule(i)">
            <i class="material-icons" matTooltip="Удалить">close</i>
           </button>
-        </span>
+          </span>
+        </div>
+        <div class="ranges-list" *ngIf="!control.value['isEditing']">
+          Правила:
+          <mat-chip-list>
+            <mat-chip *ngFor="let range of control.get('ranges').value">
+              {{range}}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+        <mat-form-field *ngIf="control.value['isEditing']" style="width: 100%;">
+          <textarea
+            (keypress)="isRangeInput($event.key)"
+            matInput
+            placeholder="Правила"
+            formControlName="ranges"
+          >
+          </textarea>
+          <mat-error>
+            В этих правилах допущены ошибки: {{control.getError('badRanges')}}
+          </mat-error>
+        </mat-form-field>
       </div>
-      <div class="restrictions-list" *ngIf="!isEditing">
-        <mat-chip-list>
-          <mat-chip *ngFor="let range of ranges">
-            {{range}}
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-      <mat-form-field *ngIf="isEditing" style="width: 100%;">
-        <textarea
-          (keypress)="isRangeInput($event.key)"
-          matInput
-          placeholder="Правила"
-          [formControl]="textareaControl"
-        >
-        </textarea>
-        <mat-error *ngIf="textareaControl.hasError('badRanges')">
-          В этих правилах допущены ошибки: {{textareaControl.getError('badRanges')}}
-        </mat-error>
-      </mat-form-field>
     </div>
   </section>
 </form>
-
- <!-- <label>Тема: </label>
-    <select
-      class="my-input"
-      formControlName="topic"
-    >
-      <option
-        *ngFor="let topic of topics"
-        [value]="topic.name"
-      >
-        {{topic.caption}}
-      </option>
-    </select>
-    <select
-      class="my-input"
-      formControlName="level"
-    >
-      <option
-        *ngFor="let level of levels"
-        [value]="level"
-      >
-        {{level}}
-      </option>
-    </select> -->

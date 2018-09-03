@@ -13,9 +13,10 @@ mat-form-field.mat-form-field {
   width: auto;
 }
 
-.restrictions {
+.rule {
   padding-left: 1em;
   border-left: 2px solid $text-blue;
+  margin-top: 1em;
 }
 
 .section-header > * {
