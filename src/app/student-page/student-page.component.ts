@@ -161,7 +161,7 @@ export class StudentPageComponent implements OnInit {
 
   get currentOperationString(): string {
     if (this.currentOperationIndex === -1) {
-      return '';
+      return ' ';
     }
     const currentOperation = this.operations[this.currentOperationIndex];
     return this.operationToString(currentOperation);
