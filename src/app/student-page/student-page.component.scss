@@ -9,6 +9,8 @@
 
 .main-section {
   padding: 1em;
+  // height: 100%;
+  // flex: 1;
 }
 
 .enter-answer-button {
@@ -123,9 +125,11 @@
 }
 
 .task-section {
-  flex: 1;
+  // flex: 1;
   // flex-shrink: 0;
-  margin-right: 1em;
+  // margin-right: 1em;
+  // height: 100%;
+  width: 50%;
   overflow: auto;
 }
 
@@ -146,13 +150,24 @@
   border-left: 0;
   border-right: 0;
   white-space: nowrap;
-  overflow: hidden;
+  overflow-x: scroll;
 }
 
 .past-operation {
   margin-right: 1em;
 }
 
+.my-checkbox {
+  outline: 0;
+  transform: scale(1.5);
+  padding: 0;
+  margin: 0;
+}
+
 .not-in-focus {
   opacity: 0.7;
+  position: relative;
+  // left: -100vw;
+  width: 0;
+  visibility: hidden;
 }

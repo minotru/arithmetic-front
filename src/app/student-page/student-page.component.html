@@ -75,7 +75,11 @@
           Очистить
         </button>
       </span>
-      <div class="past-operations" *ngIf="appState !== 'config'" #pastOperationsBlock>
+      <div
+        class="past-operations"
+        #pastOperationsBlock
+        *ngIf="showPastOperations"
+      >
         <span
           *ngFor="let operation of pastOperations"
           class="past-operation"
@@ -84,6 +88,23 @@
         </span>
         &nbsp;
       </div>
+      <div>
+        <i
+          class="material-icons"
+          *ngIf="showPastOperations"
+          (click)="showPastOperations = false"
+        >
+          keyboard_arrow_up
+        </i>
+        <i
+          *ngIf="!showPastOperations"
+          class="material-icons"
+          (click)="showPastOperations = true"
+        >
+          keyboard_arrow_down
+        </i>
+      </div>
+     
     </div>
   </section>
 
@@ -140,9 +161,10 @@
         >
       </div>
       <div class="withRemainder" *ngIf="isDivisionTopic()">
-        С остатком
+        С остатком:&nbsp;
         <input
           type="checkbox"
+          class="my-checkbox"
           [formControl]="configForm.controls['withRemainder']"
         >
       </div>

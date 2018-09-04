@@ -4,6 +4,7 @@ import { TopicName, IOperation, OperationType, ITaskConfig, ITask, ITopicPreview
 import { UserService } from '../services/user.service';
 import { TaskService } from '../services/task.service';
 import { ALL_TOPICS } from '../topics';
+import { OPERATIONS } from '../mocks/operations';
 
 const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.7,
@@ -38,6 +39,7 @@ export class StudentPageComponent implements OnInit {
   currentOperationIndex = 0;
   timerId: number;
   appState: AppState;
+  showPastOperations: boolean;
   @ViewChild('answerInput') answerInput: HTMLInputElement;
   @ViewChild('pastOperationsBlock') pastOperationsBlock: HTMLElement;
   answerInputControl = new FormControl('');
@@ -50,14 +52,15 @@ export class StudentPageComponent implements OnInit {
   ngOnInit() {
     this.configForm = this.fb.group({
       speed: [0.3],
-      topic: [''],
-      level: [''],
+      topic: ['', Validators.required],
+      level: ['', Validators.required],
       digitsCnt: [2],
       operationsCnt: [''],
       withRemainder: [false],
     });
     this.setPlusMinusValidators();
     this.appState = AppState.CONFIG;
+    // this.currentOperationIndex = OPERATIONS.length * 4;
     // this.onStart();
   }
 
@@ -110,6 +113,7 @@ export class StudentPageComponent implements OnInit {
         topic: null,
         level: null,
       });
+      return;
     } else {
       this.configForm.patchValue({
         topic: newTopic,
@@ -176,6 +180,7 @@ export class StudentPageComponent implements OnInit {
   }
 
   runApp() {
+    this.showPastOperations = true;
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
     // this.answerInput.focus();
@@ -201,7 +206,7 @@ export class StudentPageComponent implements OnInit {
       this.currentOperationIndex++;
       this.playTickSound();
     }
-    this.pastOperationsBlock.scrollBy(50, 0);
+    this.pastOperationsBlock.scrollBy(40, 0);
   }
 
   onAnswerInput() {
@@ -222,7 +227,8 @@ export class StudentPageComponent implements OnInit {
   }
 
   get operations(): IOperation[] {
-    return this.task.operations;
+    // return this.task.operations;
+    return [...OPERATIONS, ...OPERATIONS, ...OPERATIONS, ...OPERATIONS] ;
   }
 
   @ViewChild('answerInput') set setAnswerInput(ref: ElementRef) {
