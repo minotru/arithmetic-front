@@ -35,16 +35,16 @@ export const ALL_TOPICS: ITopicPreview[] = [
       '3x2',
     ],
   },
-  {
-    name: TopicName.DIVISION,
-    caption: 'ДЕЛЕНИЕ',
-    levels: [
-      '2/1',
-      '3/1',
-      '2/2',
-      '3/2',
-    ],
-  },
+  // {
+  //   name: TopicName.DIVISION,
+  //   caption: 'ДЕЛЕНИЕ',
+  //   levels: [
+  //     '2/1',
+  //     '3/1',
+  //     '2/2',
+  //     '3/2',
+  //   ],
+  // },
 ];
 
 
