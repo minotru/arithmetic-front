@@ -26,6 +26,10 @@ const DEFAULT_TASK_CONFIG: ITaskConfig = {
   withRemainder: false,
 };
 
+const soundMap = {
+  tick: 'assets/tick.mp3',
+};
+
 @Component({
   selector: 'app-student-page',
   templateUrl: './student-page.component.html',
@@ -41,8 +45,9 @@ export class StudentPageComponent implements OnInit {
   appState: AppState;
   showPastOperations: boolean;
   @ViewChild('answerInput') answerInput: HTMLInputElement;
-  @ViewChild('pastOperationsBlock') pastOperationsBlock: HTMLElement;
+  @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
   answerInputControl = new FormControl('');
+  // tickSound: HTMLAudioElement;
 
   constructor(
     private fb: FormBuilder,
@@ -59,9 +64,19 @@ export class StudentPageComponent implements OnInit {
       withRemainder: [false],
     });
     this.setPlusMinusValidators();
+    // this.setupMockTask();
+    // this.runApp();
     this.appState = AppState.CONFIG;
-    // this.currentOperationIndex = OPERATIONS.length * 4;
     // this.onStart();
+  }
+
+  setupMockTask() {
+    this.task = {
+      operations: [...OPERATIONS, ...OPERATIONS, ...OPERATIONS],
+      config: {
+        speed: 0.2,
+      },
+    } as ITask;
   }
 
   private setDivisionValidators() {
@@ -183,6 +198,7 @@ export class StudentPageComponent implements OnInit {
     this.showPastOperations = true;
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
+    // this.currentOperationIndex = this.task.operations.length - 1;
     // this.answerInput.focus();
     window.setTimeout(() => {
       this.timerId = window.setInterval(
@@ -193,8 +209,11 @@ export class StudentPageComponent implements OnInit {
     );
   }
 
-  playTickSound() {
-    new Audio('../../assets/tick.mp3').play();
+  scrollToLastOperation() {
+    const lastOperation = <HTMLElement>this.pastOperationsList.lastChild;
+    if (lastOperation && lastOperation.scrollIntoView) {
+      lastOperation.scrollIntoView();
+    }
   }
 
   onNextOperation() {
@@ -204,9 +223,9 @@ export class StudentPageComponent implements OnInit {
       // this.answerInput.focus();
     } else {
       this.currentOperationIndex++;
-      this.playTickSound();
+      this.scrollToLastOperation();
+      this.playSound('tick');
     }
-    this.pastOperationsBlock.scrollBy(40, 0);
   }
 
   onAnswerInput() {
@@ -226,9 +245,36 @@ export class StudentPageComponent implements OnInit {
       }));
   }
 
+  // scrollPastOperationsLeft() {
+  //   const dx = parseFloat(getComputedStyle(this.pastOperationsList).fontSize);
+  //   this.pastOperationsList.scrollBy({
+  //     left: -dx,
+  //     top: 0,
+  //     behavior: 'smooth',
+  //   });
+  // }
+
+  playSound(soundName: string) {
+    const soundPath = soundMap[soundName];
+    if (!soundPath) {
+      throw new Error(`there is no sound ${soundName}`);
+    }
+    const mp3Source = `<source src="${soundPath}" type="audio/mpeg">`;
+    const soundContainer = document.getElementById('sound-container');
+    soundContainer.innerHTML = `<audio autoplay="autoplay">${mp3Source}</audio>`;
+  }
+
+  // scrollPastOperationsRight() {
+  //   const dx = parseFloat(getComputedStyle(this.pastOperationsList).fontSize);
+  //   this.pastOperationsList.scrollBy({
+  //     left: dx,
+  //     top: 0,
+  //     behavior: 'smooth',
+  //   });
+  // }
+
   get operations(): IOperation[] {
-    // return this.task.operations;
-    return [...OPERATIONS, ...OPERATIONS, ...OPERATIONS, ...OPERATIONS] ;
+    return this.task.operations;
   }
 
   @ViewChild('answerInput') set setAnswerInput(ref: ElementRef) {
@@ -237,9 +283,9 @@ export class StudentPageComponent implements OnInit {
     }
   }
 
-  @ViewChild('pastOperationsBlock') set setPastOperations(ref: ElementRef) {
+  @ViewChild('pastOperationsList') set setPastOperations(ref: ElementRef) {
     if (ref) {
-      this.pastOperationsBlock = ref.nativeElement;
+      this.pastOperationsList = ref.nativeElement;
     }
   }
 

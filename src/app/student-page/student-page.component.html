@@ -1,10 +1,10 @@
 <main
   class="main-section"
   fxLayout="row"
-  fxLayoutAlign="center"
+  fxLayoutAlign="center stretch"
   fxLayoutGap="1em"
 >
-  <section class="section" [class.not-in-focus]="appState !== 'config'">
+  <section class="section" [class.not-in-focus]="appState !== 'config'" disabled>
     <header>
       <h1 class="section-header-text">ТЕМЫ</h1>
     </header>
@@ -37,26 +37,42 @@
       </div>
     </div>
   </section>
-  <section class="section task-section" *ngIf="appState !== 'config'" fxLayout="column"> 
+  <section
+    class="section task-section"
+    *ngIf="appState !== 'config'"
+    fxLayout="column"
+  > 
     <header class="section-header">
       <h1 class="section-header-text">ПРИМЕР</h1>
     </header>
-    <div class="section-content" fxLayout="column" fxLayoutAlign="space-between center" style="height: 100%;">
+    <div
+      fxLayout="column"
+      fxLayoutAlign="space-between center"
+      fxFlex="1 0"
+    >
       <div class="task" *ngIf="appState !== 'config'">
-        <span *ngIf="appState === 'running'">
+        <span *ngIf="appState === 'running'" class="task-text">
           {{currentOperationString}}
         </span>
-        <input
+        <div
           *ngIf="appState === 'enter_answer' || appState === 'answered'"
-          type="text"
-          maxlength="3"
-          (keypress)="isNumberInput($event)"
-          (keyup.enter)="onAnswerInput()"
-          fxFlex="none"
-          class="my-input enter-answer-input"
-          #answerInput
-          autofocus
+          fxLayout="column"
+          fxLayoutAlign="start center"
         >
+          <input
+            type="text"
+            maxlength="3"
+            (keypress)="isNumberInput($event)"
+            (keyup.enter)="onAnswerInput()"
+            fxFlex="none"
+            class="my-input answer-input task-text"
+            #answerInput
+            autofocus
+          >
+          <label class="answer-input-hint">
+            Ответ
+          </label>
+        </div>
       </div>
 
       <button
@@ -77,34 +93,35 @@
       </span>
       <div
         class="past-operations"
-        #pastOperationsBlock
-        *ngIf="showPastOperations"
-      >
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      > 
+        <!-- <i class="material-icons icon-button" (click)="scrollPastOperationsLeft()">
+          keyboard_arrow_left
+        </i> -->
         <span
-          *ngFor="let operation of pastOperations"
-          class="past-operation"
+          #pastOperationsList
+          class="past-operations-list"
+          [class.hidden]="!showPastOperations"
         >
-          {{operationToString(operation)}}
+          &nbsp;
+          <span
+            *ngFor="let operation of pastOperations"
+            class="past-operation"
+          >
+            {{operationToString(operation)}}
+          </span>
         </span>
-        &nbsp;
-      </div>
-      <div>
+        <!-- <i class="material-icons icon-button" (click)="scrollPastOperationsLeft()">keyboard_arrow_right</i> -->
         <i
-          class="material-icons"
-          *ngIf="showPastOperations"
-          (click)="showPastOperations = false"
+          class="material-icons past-operations-show icon-button"
+          [ngClass]="showPastOperations ? 'past-operations-show--stop' : 'past-operations-show--play'"
+          (click)="showPastOperations = !showPastOperations"
         >
-          keyboard_arrow_up
+          slideshow
         </i>
-        <i
-          *ngIf="!showPastOperations"
-          class="material-icons"
-          (click)="showPastOperations = true"
-        >
-          keyboard_arrow_down
-        </i>
-      </div>
-     
+
+      </div>   
     </div>
   </section>
 
@@ -180,3 +197,7 @@
     </div>
   </section>
 </main>
+
+<div id="sound-container">
+
+</div>

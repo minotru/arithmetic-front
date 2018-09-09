@@ -1,5 +1,4 @@
 @import '../common.scss';
-
 .section {
   padding: 1em;
   border-radius: 1em;
@@ -8,22 +7,16 @@
 }
 
 .main-section {
-  padding: 1em;
-  // height: 100%;
+  padding: 1em; // height: 100%;
   // flex: 1;
 }
 
-.enter-answer-button {
-  // max-width: 50%;
-  // flex: 0 1 auto;
-}
-
-// .start-button {
-//   // background: $text-bk-1;
-// }
-
 .start-button:hover {
   border: 2px solid $text-bk-1;
+}
+
+.icon-button:hover {
+  cursor: pointer;
 }
 
 .section-header-text {
@@ -39,11 +32,9 @@
   width: 100%;
 }
 
-
 // .topic {
 // }
-
-.topic > * {
+.topic>* {
   margin: auto;
 }
 
@@ -57,17 +48,16 @@
   background: $text-bk-2;
 }
 
-
 .level-name {
   font-weight: bolder;
 }
 
-.level.selected, .topic-name.selected {
+.level.selected,
+.topic-name.selected {
   background: red;
   color: white;
   font-weight: bolder;
 }
-
 
 .level:hover {
   transform: scale(1.1);
@@ -89,7 +79,6 @@
 // .params-digits {
 //   // font-size: larger;
 // }
-
 .params-digits-icon {
   color: red;
   color: #FF8C77;
@@ -102,21 +91,26 @@
 //   border-bottom: 1px dashed black;
 //   display: inline-block;
 // }
-
 .params-digits-icon:hover {
   cursor: pointer;
 }
 
-.enter-answer-input {
+.answer-input {
   color: $text-blue;
-  width: 100%;
+  width: 2em;
   font-size: 1em;
 }
-.enter-answer-input.valid {
+
+.answer-input-hint {
+  font-size: 1rem;
+  color: #5190A5
+}
+
+.answer-input.valid {
   color: $text-bk-2;
 }
 
-.enter-answer-input.invalid {
+.answer-input.invalid {
   color: $text-accent;
 }
 
@@ -125,19 +119,15 @@
 }
 
 .task-section {
-  // flex: 1;
-  // flex-shrink: 0;
-  // margin-right: 1em;
-  // height: 100%;
-  width: 50%;
-  overflow: auto;
+  flex: 1;
+  min-width: 26em;
 }
-
-// .section-content {
-// }
 
 .task {
   margin: 0 auto;
+}
+
+.task-text {
   font-size: 12em;
   color: #5190A5;
 }
@@ -150,11 +140,30 @@
   border-left: 0;
   border-right: 0;
   white-space: nowrap;
-  overflow-x: scroll;
+}
+
+.past-operations-list {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  // border-left: 1px dashed $text-blue;
+  // border-right: 1px dashed $text-blue;
+}
+
+.past-operations-show {
+  border-left: 2px solid $text-blue;
+}
+
+.past-operations-show--play {
+  color: $text-bk-2;
+}
+
+.past-operations-show--stop {
+  color: $text-accent;
 }
 
 .past-operation {
-  margin-right: 1em;
+  padding-right: 1em;
 }
 
 .my-checkbox {
@@ -166,8 +175,13 @@
 
 .not-in-focus {
   opacity: 0.7;
-  position: relative;
-  // left: -100vw;
-  width: 0;
+  // display: none;
+  // position: relative; // left: -100vw;
+  // width: 0;
+  // visibility: hidden;
+  // display: none;
+}
+
+.hidden {
   visibility: hidden;
 }
