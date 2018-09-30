@@ -6,8 +6,8 @@ import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { STUDENTS } from '../mocks/students';
 
-const baseUrl = environment.baseUrl;
-const apiUrl = `${baseUrl}/api`;
+const apiUrl = environment.apiUrl;
+const authUrl = environment.authUrl;
 
 @Injectable()
 export class UserService {
@@ -47,7 +47,7 @@ export class UserService {
 
   login(login: string, password: string): Observable<IUser> {
     return this.http.post<IUser>(
-      `${baseUrl}/auth/login`,
+      `${authUrl}/login`,
       { login, password },
       { withCredentials: true },
     ).pipe(
@@ -60,7 +60,7 @@ export class UserService {
 
   logout(): Observable<void> {
     return this.http
-      .get<any>(`${baseUrl}/auth/logout`)
+      .get<any>(`${authUrl}/logout`)
       .pipe(tap(() => {
         this.user = null;
         window.sessionStorage.removeItem('user');

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { UserRole } from '../interfaces';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -16,6 +16,7 @@ export class LoginPageComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
