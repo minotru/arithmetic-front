@@ -19,8 +19,10 @@ export class CanActivateService implements CanActivate {
         map(() => true),
       );
     }
-    if (route.url.find(url => url.path === 'student' &&
-      this.userService.isAuthorized())
+
+    if (route.url.find(url => url.path === 'student') &&
+      this.userService.isAuthorized() &&
+      this.userService.getUser().role === UserRole.STUDENT
     ) {
       return of(true);
     }
@@ -29,6 +31,20 @@ export class CanActivateService implements CanActivate {
       this.userService.isAuthorized() &&
       this.userService.getUser().role === UserRole.ADMIN
     ) {
+      return of(true);
+    }
+
+    if (this.userService.isAuthorized()) {
+      if (this.userService.getUser().role === UserRole.ADMIN) {
+        this.router.navigate(['/teacher']);
+        return of(true);
+      }
+      if (this.userService.getUser().role === UserRole.STUDENT) {
+        this.router.navigate(['/teacher']);
+      }
+    }
+
+    if (route.url.find(url => url.path === 'login')) {
       return of(true);
     }
 
