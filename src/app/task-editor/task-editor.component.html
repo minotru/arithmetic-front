@@ -70,7 +70,7 @@
       type="button"
       (click)="addRule()"
       style="margin-right:1em;"
-      [disabled]="!form.get('topic').value || !form.get('level').value"
+      [disabled]="!form.get('topic').value || !form.get('level').value || !form.get('operation').value"
     >
       Добавить правило
     </button>

@@ -50,7 +50,7 @@ export class TaskEditorComponent implements OnInit {
       value: [rule.value],
       ranges: [rule.ranges],
     }));
-    this.ruleControls.get([this.ruleControls.length]).disable();
+    this.ruleControls.get([this.ruleControls.length - 1]).disable();
   }
 
   textToRanges(rawText: string): {
@@ -100,7 +100,7 @@ export class TaskEditorComponent implements OnInit {
       .getLevel(topicName, levelName)
       .subscribe((level) => {
         this.level = level;
-        this.loadRules();
+        this.form.get('maxDigit').setValue(level.maxDigit);
       });
   }
 
@@ -118,7 +118,7 @@ export class TaskEditorComponent implements OnInit {
       this.form.get(['rules', ind]).disable();
       return this.form.get(['rules', ind]);
     }
-    const rangesText = this.form.value.rules[ind].ranges;
+    const rangesText = this.form.get(['rules', ind, 'ranges']).value;
     const { ranges, badRanges } = this.textToRanges(rangesText);
     if (badRanges.length) {
       this.ruleControls.controls[ind].setErrors({ badRanges });
@@ -144,15 +144,18 @@ export class TaskEditorComponent implements OnInit {
       maxDigit: ['', Validators.min(1), Validators.max(9)],
       operation: [''],
       rules: this.fb.array([]),
-      rulesType: [],
+      rulesType: [''],
     });
   }
 
   saveChanges() {
     const level: ILevel = Object.assign({}, this.level);
-    const section = this.form.value['operation'] === 'plus' ? level.plus : level.minus;
-    section.rules = this.form.value['rules'];
-    section.rulesType = this.form.valid['rulesType'];
+    level.maxDigit = this.form.value['maxDigit'];
+    if (this.form.value['operation']) {
+      const section = this.form.value['operation'] === 'plus' ? level.plus : level.minus;
+      section.rules = this.form.get('rules').value;
+      section.rulesType = this.form.value['rulesType'];
+    }
     const levelName = this.form.value['level'];
     const topicName = this.form.value['topic'];
     this.mapService
