@@ -15,7 +15,6 @@ export class TaskEditorComponent implements OnInit {
   level: ILevel;
   form: FormGroup;
   topics = TOPICS;
-  isEditing: boolean;
 
   constructor(
     private mapService: MapService,
@@ -23,15 +22,14 @@ export class TaskEditorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.mapService.getMap().subscribe(map => this.map = map);
     this.form = this.fb.group({
       topic: [''],
       level: [''],
-      operation: ['minus'],
+      maxDigit: [],
+      operation: [''],
       rules: this.fb.array([]),
-      rulesType: [RulesType.ALLOWED],
+      rulesType: [],
     });
-    this.isEditing = false;
   }
 
   get levels(): string[] {
@@ -51,8 +49,8 @@ export class TaskEditorComponent implements OnInit {
     this.ruleControls.push(this.fb.group({
       value: [rule.value],
       ranges: [rule.ranges],
-      isEditing: false,
     }));
+    this.ruleControls.get([this.ruleControls.length]).disable();
   }
 
   textToRanges(rawText: string): {
@@ -61,7 +59,7 @@ export class TaskEditorComponent implements OnInit {
   } {
     const text = rawText.replace(/ /g, '');
     const tokens = text.split(',');
-    const regex = /^\d{1,3}(-\d{1,3})?$/;
+    const regex = /^[1-9]\d{0,2}(-[1-9]\d{0,2})?$/;
     const ranges: string[] = [];
     const badRanges: string[] = [];
     tokens.forEach((token, index) => {
@@ -85,6 +83,16 @@ export class TaskEditorComponent implements OnInit {
     return { ranges, badRanges };
   }
 
+  onSelectTopic() {
+    this.form.patchValue({
+      level: '',
+      maxDigit: '',
+      operation: '',
+      rulesType: '',
+    });
+    this.clearRules();
+  }
+
   onSelectLevel() {
     const topicName = this.form.value['topic'];
     const levelName = this.form.value['level'];
@@ -102,14 +110,13 @@ export class TaskEditorComponent implements OnInit {
   }
 
   edit(ind: number) {
-    this.ruleControls.get([ind]).patchValue({ isEditing: true });
+    this.ruleControls.get([ind]).enable();
   }
 
   finishEditing(ind: number) {
     if (Array.isArray(this.ruleControls.get([ind, 'ranges']).value)) {
-      return this.form.get(['rules', ind]).patchValue({
-        isEditing: false,
-      });
+      this.form.get(['rules', ind]).disable();
+      return this.form.get(['rules', ind]);
     }
     const rangesText = this.form.value.rules[ind].ranges;
     const { ranges, badRanges } = this.textToRanges(rangesText);
@@ -119,8 +126,8 @@ export class TaskEditorComponent implements OnInit {
     } else {
       this.ruleControls.get([ind]).patchValue({
         ranges,
-        isEditing: false,
       });
+      this.ruleControls.get([ind]).disable();
     }
   }
 
@@ -128,6 +135,17 @@ export class TaskEditorComponent implements OnInit {
     while (this.ruleControls.controls.length) {
       this.ruleControls.removeAt(0);
     }
+  }
+
+  clearForm() {
+    this.form.setValue({
+      topic: [''],
+      level: [''],
+      maxDigit: ['', Validators.min(1), Validators.max(9)],
+      operation: [''],
+      rules: this.fb.array([]),
+      rulesType: [],
+    });
   }
 
   saveChanges() {

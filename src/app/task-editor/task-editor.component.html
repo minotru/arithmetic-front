@@ -4,6 +4,7 @@
       <mat-select
         placeholder="Тема"
         formControlName="topic"
+        (selectionChange)="onSelectTopic()"
       >
         <mat-option
           *ngFor="let topic of topics"
@@ -26,6 +27,16 @@
           {{level}}
         </mat-option>
       </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input 
+        type=number
+        matInput
+        formControlName="maxDigit"
+        placeholder="Максимальная цифра"
+        min="1"
+        max="9"
+      >
     </mat-form-field>
   </header>
   <section>
@@ -59,6 +70,7 @@
       type="button"
       (click)="addRule()"
       style="margin-right:1em;"
+      [disabled]="!form.get('topic').value || !form.get('level').value"
     >
       Добавить правило
     </button>
@@ -90,7 +102,7 @@
               formControlName="value"
             >
           </mat-form-field>:
-          <span *ngIf="!control.value['isEditing']">
+          <span *ngIf="control.disabled">
             <button
               mat-icon-button
               type="button"
@@ -100,7 +112,7 @@
               <i class="material-icons">edit</i>
             </button>
           </span>
-          <span *ngIf="control.value['isEditing']">
+          <span *ngIf="control.enabled">
           <button mat-icon-button type="button" (click)="finishEditing(i)">
            <i class="material-icons" matTooltip="Сохранить">done</i>
           </button>
@@ -109,7 +121,7 @@
           </button>
           </span>
         </div>
-        <div class="ranges-list" *ngIf="!control.value['isEditing']">
+        <div class="ranges-list" *ngIf="control.disabled">
           Правила:
           <mat-chip-list>
             <mat-chip *ngFor="let range of control.get('ranges').value">
@@ -117,7 +129,7 @@
             </mat-chip>
           </mat-chip-list>
         </div>
-        <mat-form-field *ngIf="control.value['isEditing']" style="width: 100%;">
+        <mat-form-field *ngIf="control.enabled" style="width: 100%;">
           <textarea
             (keypress)="isRangeInput($event.key)"
             matInput
