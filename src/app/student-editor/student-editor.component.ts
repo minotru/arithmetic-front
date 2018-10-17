@@ -23,14 +23,13 @@ export class StudentEditorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.activatedRoute.snapshot.
     this.form = this.fb.group({
       login: ['', Validators.required],
       password: ['', Validators.required],
       name: ['',  Validators.required],
       surname: ['',  Validators.required],
       phoneNumber: [''],
-      isActive: [''],
+      isActive: [false],
     });
     if (this.studentToEdit) {
       const editFields = Object.assign({}, this.studentToEdit);
