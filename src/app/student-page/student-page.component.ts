@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn } from '@angular/forms';
 import { TopicName, IOperation, OperationType, ITaskConfig, ITask, ITopicPreview } from '../interfaces/task';
-import { UserService } from '../services/user.service';
 import { TaskService } from '../services/task.service';
 import { ALL_TOPICS } from '../topics';
 import { OPERATIONS } from '../mocks/operations';
@@ -47,7 +46,6 @@ export class StudentPageComponent implements OnInit {
   @ViewChild('answerInput') answerInput: HTMLInputElement;
   @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
   answerInputControl = new FormControl('');
-  // tickSound: HTMLAudioElement;
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +54,7 @@ export class StudentPageComponent implements OnInit {
 
   ngOnInit() {
     this.configForm = this.fb.group({
-      speed: [0.3],
+      speed: [],
       topic: ['', Validators.required],
       level: ['', Validators.required],
       digitsCnt: [2],
@@ -64,10 +62,7 @@ export class StudentPageComponent implements OnInit {
       withRemainder: [false],
     });
     this.setPlusMinusValidators();
-    // this.setupMockTask();
-    // this.runApp();
     this.appState = AppState.CONFIG;
-    // this.onStart();
   }
 
   setupMockTask() {
@@ -155,7 +150,7 @@ export class StudentPageComponent implements OnInit {
 
   onStart() {
     const taskConfig = this.configForm.value as ITaskConfig;
-    // taskConfig.speed = 0.1;
+    taskConfig.speed = +taskConfig.speed;
     this.taskService
       .generateTask(taskConfig)
       .subscribe((task) => {
@@ -198,12 +193,10 @@ export class StudentPageComponent implements OnInit {
     this.showPastOperations = true;
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
-    // this.currentOperationIndex = this.task.operations.length - 1;
-    // this.answerInput.focus();
     window.setTimeout(() => {
       this.timerId = window.setInterval(
         () => this.onNextOperation(),
-        this.task.config.speed * 1000);
+        +this.task.config.speed * 1000);
     },
       1000,
     );
@@ -217,14 +210,13 @@ export class StudentPageComponent implements OnInit {
   }
 
   onNextOperation() {
+    this.scrollToLastOperation();
+    this.playSound('tick');
     if (this.currentOperationIndex + 1 === this.operations.length) {
       window.clearInterval(this.timerId);
       this.appState = AppState.ENTER_ANSWER;
-      // this.answerInput.focus();
     } else {
       this.currentOperationIndex++;
-      this.scrollToLastOperation();
-      this.playSound('tick');
     }
   }
 

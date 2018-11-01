@@ -150,21 +150,17 @@
       </div>
       <div class="params-speed" *ngIf="isPlusMinusTopic()">
         Скорость:
-        <input
-          id="speed"
-          class="my-input"
-          type="number"
-          list="speedValues" 
-          step="0.1"
-          min="0.3"
-          max="7"
-          [formControl]="configForm.get('speed')"
+        <select 
           required
+          id="speedValues"
+          class="my-input"
+          [formControl]="configForm.get('speed')"
         >
-        &nbsp;c.
-        <datalist id="speedValues">
           <option *ngFor="let opt of speedValues" [value]="opt">
-        </datalist>
+            {{opt}}
+          </option>
+        </select>
+        &nbsp;c.
       </div>
       <div class="operations-cnt" *ngIf="isPlusMinusTopic()">
         Количество действий:

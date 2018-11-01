@@ -16,7 +16,6 @@ export class StudentEditorComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<StudentEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public studentToEdit: IUser,
