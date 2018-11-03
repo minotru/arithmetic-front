@@ -1,4 +1,10 @@
-<button mat-raised-button type="button" (click)="addStudent()">Добавить ученика</button>
+<header fxLayout="row"> 
+  <div fxFlex="1 0">
+    <button mat-raised-button type="button" (click)="addStudent()">Добавить ученика</button>
+  </div>
+  <h1  style="font-size: larger; font-weight: bold; white-space: nowrap;">Список учеников</h1>
+  <div fxFlex="1 0"></div>
+</header>
 
 <table mat-table [dataSource]="students">
 
