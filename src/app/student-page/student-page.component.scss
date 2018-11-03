@@ -1,13 +1,5 @@
 @import '../common.scss';
 
-// :host {
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-items: center;
-//   flex: 1;
-// }
-
 .section {
   padding: 1em;
   border-radius: 1em;
@@ -16,8 +8,7 @@
 }
 
 .main-section {
-  padding: 1em; // height: 100%;
-  // flex: 1;
+  padding: 1em; 
 }
 
 .start-button:hover {
@@ -85,21 +76,11 @@
   font-size: larger;
 }
 
-// .params-digits {
-//   // font-size: larger;
-// }
 .params-digits-icon {
   color: red;
   color: #FF8C77;
 }
 
-// .my-checkbox {
-//   position: relative;
-//   width: 1em;
-//   height: 1em;
-//   border-bottom: 1px dashed black;
-//   display: inline-block;
-// }
 .params-digits-icon:hover {
   cursor: pointer;
 }
@@ -184,11 +165,6 @@
 
 .not-in-focus {
   opacity: 0.7;
-  // display: none;
-  // position: relative; // left: -100vw;
-  // width: 0;
-  // visibility: hidden;
-  // display: none;
 }
 
 .hidden {

@@ -46,6 +46,7 @@ export class StudentPageComponent implements OnInit {
   @ViewChild('answerInput') answerInput: HTMLInputElement;
   @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
   answerInputControl = new FormControl('');
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -149,12 +150,14 @@ export class StudentPageComponent implements OnInit {
   }
 
   onStart() {
+    this.isLoading = true;
     const taskConfig = this.configForm.value as ITaskConfig;
     taskConfig.speed = +taskConfig.speed;
     this.taskService
       .generateTask(taskConfig)
       .subscribe((task) => {
         this.task = Object.assign(this.task, task);
+        this.isLoading = false;
         this.runApp();
       });
   }
@@ -193,13 +196,10 @@ export class StudentPageComponent implements OnInit {
     this.showPastOperations = true;
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
-    window.setTimeout(() => {
       this.timerId = window.setInterval(
         () => this.onNextOperation(),
         +this.task.config.speed * 1000);
-    },
-      1000,
-    );
+
   }
 
   scrollToLastOperation() {
@@ -210,18 +210,20 @@ export class StudentPageComponent implements OnInit {
   }
 
   onNextOperation() {
+    console.log(new Date(Date.now()));
     this.scrollToLastOperation();
-    this.playSound('tick');
     if (this.currentOperationIndex + 1 === this.operations.length) {
       window.clearInterval(this.timerId);
       this.appState = AppState.ENTER_ANSWER;
     } else {
+      this.playSound('tick');
       this.currentOperationIndex++;
     }
   }
 
   onAnswerInput() {
     const userAnswer = Number.parseInt(this.answerInput.value);
+    this.isLoading = true;
     this.taskService
       .checkAnswer(this.task.id, userAnswer)
       .subscribe((task => {
@@ -234,6 +236,7 @@ export class StudentPageComponent implements OnInit {
           this.answerInput.classList.add('invalid');
         }
         this.appState = AppState.ANSWERED;
+        this.isLoading = false;
       }));
   }
 

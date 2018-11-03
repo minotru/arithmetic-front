@@ -4,7 +4,7 @@
   fxLayoutAlign="center stretch"
   fxLayoutGap="1em"
 >
-  <section class="section" [class.not-in-focus]="appState !== 'config'" disabled>
+  <section class="section" [class.not-in-focus]="appState !== 'config'">
     <header>
       <h1 class="section-header-text">ТЕМЫ</h1>
     </header>
@@ -79,12 +79,13 @@
         *ngIf="appState === 'enter_answer'"
         class="enter-answer-button button"
         (click)="onAnswerInput()"
+        [disabled]="isLoading"
         type="button"
       >
         Ответить
       </button>
       <span *ngIf="appState === 'answered'" fxLayoutGap="1em">
-        <button type="button" class="button" (click)="onRetry()">
+        <button type="button" class="button" (click)="onRetry()" [disabled]="isLoading">
           Еще раз
         </button>
         <button type="button" class="button" (click)="onClear()">
