@@ -16,10 +16,17 @@ export class LoginPageComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    if (this.userService.isAuthorized()) {
+      if (this.userService.getUser().role === UserRole.ADMIN) {
+        return this.router.navigate(['/teacher']);
+      }
+      if (this.userService.getUser().role === UserRole.STUDENT) {
+        return this.router.navigate(['/student']);
+      }
+    }
     this.form = this.fb.group({
       login: ['', Validators.required],
       password: ['', Validators.required]

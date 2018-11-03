@@ -22,7 +22,6 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
-    canActivate: [CanActivateService],
   },
   {
     path: 'teacher',
