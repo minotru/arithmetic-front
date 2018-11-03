@@ -17,7 +17,6 @@ import { CanActivateService } from './services/can-activate.service';
 import { FooterComponent } from './footer/footer.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { StudentsListComponent } from './students-list/students-list.component';
-import { TaskEditorComponent } from './task-editor/task-editor.component';
 import { StudentEditorComponent } from './student-editor/student-editor.component';
 
 import {
@@ -47,7 +46,6 @@ import { MapService } from './services/map.service';
     FooterComponent,
     AdminPageComponent,
     StudentsListComponent,
-    TaskEditorComponent,
     StudentEditorComponent,
     TasksHistoryComponent,
   ],
