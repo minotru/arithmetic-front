@@ -6,7 +6,7 @@ import { ALL_TOPICS } from '../topics';
 import { OPERATIONS } from '../mocks/operations';
 
 const SPEED_VALUES: number[] = [
-  7, 6, 5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.7,
+  7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
 
 enum AppState {
