@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { TopicName, IOperation, OperationType, ITaskConfig, ITask, ITopicPreview } from '../interfaces/task';
 import { TaskService } from '../services/task.service';
 import { ALL_TOPICS } from '../topics';
@@ -8,6 +8,11 @@ import { OPERATIONS } from '../mocks/operations';
 const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
+
+const minSpeedToUseVoiceSythesis = 2;
+
+const speechSpeed = 1.8;
+const speechPitch = 1.2;
 
 enum AppState {
   CONFIG = 'config',
@@ -29,6 +34,10 @@ const soundMap = {
   tick: 'assets/tick.mp3',
 };
 
+const operationTypeToText = {
+  [OperationType.PLUS]: 'плюс',
+  [OperationType.MINUS]: 'минус',
+};
 @Component({
   selector: 'app-student-page',
   templateUrl: './student-page.component.html',
@@ -47,6 +56,8 @@ export class StudentPageComponent implements OnInit {
   @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
   answerInputControl = new FormControl('');
   isLoading = false;
+  speechSynthesis: SpeechSynthesis;
+  utterance: SpeechSynthesisUtterance;
 
   constructor(
     private fb: FormBuilder,
@@ -62,8 +73,13 @@ export class StudentPageComponent implements OnInit {
       operationsCnt: [''],
       withRemainder: [false],
     });
+    this.initSpeechSynthesis();
     this.setPlusMinusValidators();
     this.appState = AppState.CONFIG;
+  }
+
+  operationToText(operation: IOperation): string {
+    return `${operationTypeToText[operation.operationType]} ${operation.operand}`;
   }
 
   setupMockTask() {
@@ -112,6 +128,21 @@ export class StudentPageComponent implements OnInit {
 
   isDivisionTopic(): boolean {
     return this.configForm.value['topic'] === TopicName.DIVISION;
+  }
+
+
+  initSpeechSynthesis() {
+    this.speechSynthesis = window.speechSynthesis;
+    this.utterance = new SpeechSynthesisUtterance();
+    this.utterance.rate = speechSpeed;
+    this.utterance.pitch = speechPitch;
+    this.utterance.lang = 'ru';
+  }
+
+  pronounceNextOperation(operation: IOperation) {
+    this.utterance.text = this.operationToText(operation);
+    this.utterance.voice = this.speechSynthesis.getVoices()[0];
+    this.speechSynthesis.speak(this.utterance);
   }
 
   selectLevel(newTopic: string, newLevel: string) {
@@ -196,9 +227,10 @@ export class StudentPageComponent implements OnInit {
     this.showPastOperations = true;
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
-      this.timerId = window.setInterval(
-        () => this.onNextOperation(),
-        +this.task.config.speed * 1000);
+    this.speechSynthesis.cancel();
+    this.timerId = window.setInterval(
+      () => this.onNextOperation(),
+      +this.task.config.speed * 1000);
 
   }
 
@@ -210,14 +242,17 @@ export class StudentPageComponent implements OnInit {
   }
 
   onNextOperation() {
-    console.log(new Date(Date.now()));
     this.scrollToLastOperation();
     if (this.currentOperationIndex + 1 === this.operations.length) {
       window.clearInterval(this.timerId);
       this.appState = AppState.ENTER_ANSWER;
     } else {
-      this.playSound('tick');
       this.currentOperationIndex++;
+      if (this.task.config.speed >= minSpeedToUseVoiceSythesis) {
+        this.pronounceNextOperation(this.operations[this.currentOperationIndex]);
+      } else {
+        this.playSound('tick');
+      }
     }
   }
 
@@ -240,15 +275,6 @@ export class StudentPageComponent implements OnInit {
       }));
   }
 
-  // scrollPastOperationsLeft() {
-  //   const dx = parseFloat(getComputedStyle(this.pastOperationsList).fontSize);
-  //   this.pastOperationsList.scrollBy({
-  //     left: -dx,
-  //     top: 0,
-  //     behavior: 'smooth',
-  //   });
-  // }
-
   playSound(soundName: string) {
     const soundPath = soundMap[soundName];
     if (!soundPath) {
@@ -258,15 +284,6 @@ export class StudentPageComponent implements OnInit {
     const soundContainer = document.getElementById('sound-container');
     soundContainer.innerHTML = `<audio autoplay="autoplay">${mp3Source}</audio>`;
   }
-
-  // scrollPastOperationsRight() {
-  //   const dx = parseFloat(getComputedStyle(this.pastOperationsList).fontSize);
-  //   this.pastOperationsList.scrollBy({
-  //     left: dx,
-  //     top: 0,
-  //     behavior: 'smooth',
-  //   });
-  // }
 
   get operations(): IOperation[] {
     return this.task.operations;
