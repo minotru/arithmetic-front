@@ -182,6 +182,14 @@
           [formControl]="configForm.controls['withRemainder']"
         >
       </div>
+      <div>
+        Показывать пример:&nbsp;
+         <input
+          type="checkbox"
+          class="my-checkbox"
+          [formControl]="configForm.controls['showPastOperations']"
+        >
+      </div>
     <button
       type="button"
       (click)="onStart()"

@@ -11,6 +11,7 @@ export interface ITaskConfig {
   operationsCnt: number;
   speed: number;
   withRemainder?: boolean;
+  showPastOperations: boolean;
 }
 
 export interface IOperation {

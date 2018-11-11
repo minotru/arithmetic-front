@@ -9,10 +9,10 @@ const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
 
-const minSpeedToUseVoiceSythesis = 2;
+const minSpeedToUseVoiceSythesis = 1.5;
 
-const speechSpeed = 1.8;
-const speechPitch = 1.2;
+const speechSpeed = 3;
+const speechPitch = 1;
 
 enum AppState {
   CONFIG = 'config',
@@ -28,6 +28,7 @@ const DEFAULT_TASK_CONFIG: ITaskConfig = {
   digitsCnt: 2,
   operationsCnt: null,
   withRemainder: false,
+  showPastOperations: false
 };
 
 const soundMap = {
@@ -57,7 +58,7 @@ export class StudentPageComponent implements OnInit {
   answerInputControl = new FormControl('');
   isLoading = false;
   speechSynthesis: SpeechSynthesis;
-  utterance: SpeechSynthesisUtterance;
+  shouldPronounceOperation: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -72,6 +73,7 @@ export class StudentPageComponent implements OnInit {
       digitsCnt: [2],
       operationsCnt: [''],
       withRemainder: [false],
+      showPastOperations: [false]
     });
     this.initSpeechSynthesis();
     this.setPlusMinusValidators();
@@ -133,16 +135,15 @@ export class StudentPageComponent implements OnInit {
 
   initSpeechSynthesis() {
     this.speechSynthesis = window.speechSynthesis;
-    this.utterance = new SpeechSynthesisUtterance();
-    this.utterance.rate = speechSpeed;
-    this.utterance.pitch = speechPitch;
-    this.utterance.lang = 'ru';
   }
 
   pronounceNextOperation(operation: IOperation) {
-    this.utterance.text = this.operationToText(operation);
-    this.utterance.voice = this.speechSynthesis.getVoices()[0];
-    this.speechSynthesis.speak(this.utterance);
+    const utterance = new SpeechSynthesisUtterance(this.operationToText(operation));
+    utterance.voice = this.speechSynthesis.getVoices()[0];
+    utterance.lang = 'ru';
+    utterance.rate = speechSpeed;
+    utterance.pitch = speechPitch;
+    this.speechSynthesis.speak(utterance);
   }
 
   selectLevel(newTopic: string, newLevel: string) {
@@ -183,7 +184,9 @@ export class StudentPageComponent implements OnInit {
   onStart() {
     this.isLoading = true;
     const taskConfig = this.configForm.value as ITaskConfig;
+    this.showPastOperations = this.configForm.value.showPastOperations;
     taskConfig.speed = +taskConfig.speed;
+    delete taskConfig.showPastOperations;
     this.taskService
       .generateTask(taskConfig)
       .subscribe((task) => {
@@ -224,10 +227,10 @@ export class StudentPageComponent implements OnInit {
   }
 
   runApp() {
-    this.showPastOperations = true;
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
     this.speechSynthesis.cancel();
+    this.shouldPronounceOperation = this.task.config.digitsCnt < 3 && this.task.config.speed >= minSpeedToUseVoiceSythesis;
     this.timerId = window.setInterval(
       () => this.onNextOperation(),
       +this.task.config.speed * 1000);
@@ -248,7 +251,7 @@ export class StudentPageComponent implements OnInit {
       this.appState = AppState.ENTER_ANSWER;
     } else {
       this.currentOperationIndex++;
-      if (this.task.config.speed >= minSpeedToUseVoiceSythesis) {
+      if (this.shouldPronounceOperation) {
         this.pronounceNextOperation(this.operations[this.currentOperationIndex]);
       } else {
         this.playSound('tick');
