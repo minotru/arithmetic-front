@@ -1,10 +1,10 @@
 <main
-  class="main-section"
+  class="wrapper"
   fxLayout="row"
   fxLayoutAlign="center stretch"
   fxLayoutGap="1em"
 >
-  <section class="section" [class.not-in-focus]="appState !== 'config'">
+  <section class="section" *ngIf="appState === 'config'">
     <header>
       <h1 class="section-header-text">ТЕМЫ</h1>
     </header>
@@ -128,7 +128,7 @@
 
   <section
     class="section"
-    [class.not-in-focus]="appState !== 'config'"
+    *ngIf="appState === 'config'"
     fxFlex="none"
   >
     <header>
@@ -193,7 +193,7 @@
     <button
       type="button"
       (click)="onStart()"
-      [disabled]="!configForm.valid"
+      [disabled]="!configForm.valid || isLoading"
       class="button start-button"
       *ngIf="appState === 'config'"
     >

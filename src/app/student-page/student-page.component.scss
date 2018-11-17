@@ -1,5 +1,10 @@
 @import '../common.scss';
 
+:host {
+  display: flex;
+  flex: 1;
+}
+
 .section {
   padding: 1em;
   border-radius: 1em;
@@ -7,8 +12,10 @@
   box-shadow: $material-shadow;
 }
 
-.main-section {
-  padding: 1em; 
+.wrapper {
+  padding: 1em;
+  flex: 1; 
+  width: 100%;
 }
 
 .start-button:hover {
@@ -110,7 +117,7 @@
 
 .task-section {
   flex: 1;
-  min-width: 26em;
+  width: 100%;
 }
 
 .task {
@@ -153,7 +160,7 @@
 }
 
 .past-operation {
-  padding-right: 1em;
+  padding-right: 0.5em;
 }
 
 .my-checkbox {

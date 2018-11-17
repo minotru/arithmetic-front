@@ -88,7 +88,7 @@ export class StudentPageComponent implements OnInit {
     this.task = {
       operations: [...OPERATIONS, ...OPERATIONS, ...OPERATIONS],
       config: {
-        speed: 0.2,
+        speed: 1,
       },
     } as ITask;
   }
