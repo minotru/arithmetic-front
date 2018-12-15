@@ -33,6 +33,7 @@ const DEFAULT_TASK_CONFIG: ITaskConfig = {
 
 const soundMap = {
   tick: 'assets/tick.mp3',
+  finish: 'assets/finish.mp3'
 };
 
 const operationTypeToText = {
@@ -249,6 +250,7 @@ export class StudentPageComponent implements OnInit {
     this.scrollToLastOperation();
     if (this.currentOperationIndex + 1 === this.operations.length) {
       window.clearInterval(this.timerId);
+      this.playSound('finish');
       this.appState = AppState.ENTER_ANSWER;
     } else {
       this.currentOperationIndex++;
