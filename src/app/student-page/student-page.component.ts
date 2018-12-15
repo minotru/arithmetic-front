@@ -75,6 +75,7 @@ export class StudentPageComponent implements OnInit {
       withRemainder: [false],
       showPastOperations: [false]
     });
+    this.configForm.setValue(DEFAULT_TASK_CONFIG);
     this.initSpeechSynthesis();
     this.setPlusMinusValidators();
     this.appState = AppState.CONFIG;
@@ -313,7 +314,6 @@ export class StudentPageComponent implements OnInit {
   }
 
   onClear() {
-    this.configForm.setValue(DEFAULT_TASK_CONFIG);
     this.answerInput.value = '';
     this.appState = AppState.CONFIG;
   }
