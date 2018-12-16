@@ -33,7 +33,8 @@ const DEFAULT_TASK_CONFIG: ITaskConfig = {
 
 const soundMap = {
   tick: 'assets/tick.mp3',
-  finish: 'assets/finish.mp3'
+  correct: 'assets/correct.mp3',
+  error: 'assets/error.mp3'
 };
 
 const operationTypeToText = {
@@ -53,7 +54,6 @@ export class StudentPageComponent implements OnInit {
   currentOperationIndex = 0;
   timerId: number;
   appState: AppState;
-  showPastOperations: boolean;
   @ViewChild('answerInput') answerInput: HTMLInputElement;
   @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
   answerInputControl = new FormControl('');
@@ -185,8 +185,7 @@ export class StudentPageComponent implements OnInit {
 
   onStart() {
     this.isLoading = true;
-    const taskConfig = this.configForm.value as ITaskConfig;
-    this.showPastOperations = this.configForm.value.showPastOperations;
+    const taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
     taskConfig.speed = +taskConfig.speed;
     delete taskConfig.showPastOperations;
     this.taskService
@@ -196,6 +195,10 @@ export class StudentPageComponent implements OnInit {
         this.isLoading = false;
         this.runApp();
       });
+  }
+
+  get showPastOperations() {
+    return this.configForm.value.showPastOperations;
   }
 
   operationToString(operation: IOperation): string {
@@ -224,6 +227,13 @@ export class StudentPageComponent implements OnInit {
       .slice(0, this.currentOperationIndex + 1);
   }
 
+  toggleShowPastOperations() {
+    const showPastOperations = this.configForm.value.showPastOperations;
+    this.configForm.patchValue({
+      showPastOperations: !showPastOperations
+    });
+  }
+
   isNumberInput(event: any): boolean {
     return event.key >= '0' && event.key <= '9';
   }
@@ -250,7 +260,6 @@ export class StudentPageComponent implements OnInit {
     this.scrollToLastOperation();
     if (this.currentOperationIndex + 1 === this.operations.length) {
       window.clearInterval(this.timerId);
-      this.playSound('finish');
       this.appState = AppState.ENTER_ANSWER;
     } else {
       this.currentOperationIndex++;
@@ -272,7 +281,9 @@ export class StudentPageComponent implements OnInit {
         this.answerInput.disabled = true;
         if (this.task.isCorrect) {
           this.answerInput.classList.add('valid');
+          this.playSound('correct');
         } else {
+          this.playSound('error');
           this.answerInput.value = this.task.answer.toString();
           this.answerInput.classList.add('invalid');
         }
