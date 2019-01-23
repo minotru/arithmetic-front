@@ -1,5 +1,4 @@
 @import '../common.scss';
-
 :host {
   display: flex;
   flex: 1;
@@ -10,11 +9,16 @@
   border-radius: 1em;
   background: white;
   box-shadow: $material-shadow;
+  margin-right: 1em;
+}
+
+.section:last-child {
+  margin-right: 0;
 }
 
 .wrapper {
   padding: 1em;
-  flex: 1; 
+  flex: 1;
   width: 100%;
 }
 
@@ -142,8 +146,7 @@
 .past-operations-list {
   width: 100%;
   white-space: nowrap;
-  overflow: hidden;
-  // border-left: 1px dashed $text-blue;
+  overflow: hidden; // border-left: 1px dashed $text-blue;
   // border-right: 1px dashed $text-blue;
 }
 

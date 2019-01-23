@@ -1,0 +1,47 @@
+<section class="section task-section" fxLayout="column">
+  <header class="section-header">
+    <h1 class="section-header-text">ПРИМЕР</h1>
+  </header>
+  <div fxLayout="column" fxLayoutAlign="space-between center" fxFlex="1 0">
+    <div class="task">
+      <span *ngIf="appState === 'running'" class="task-text">
+        {{currentOperationString}}
+      </span>
+      <div *ngIf="appState === 'enter_answer' || appState === 'answered'" fxLayout="column" fxLayoutAlign="start center">
+        <input type="text" maxlength="3" (keypress)="isNumberInput($event.key)" (keyup.enter)="onAnswerInput()" fxFlex="none"
+          class="my-input answer-input task-text" [(ngModel)]="answerInput" [ngClass]="appState === 'answered' ? (task.isCorrect ? 'valid' : 'invalid') : ''"
+          [disabled]="isLoading" autofocus>
+        <label class="answer-input-hint">
+          Ответ
+        </label>
+      </div>
+    </div>
+
+    <button *ngIf="appState === 'enter_answer'" class="enter-answer-button button" (click)="onAnswerInput()" [disabled]="isLoading"
+      type="button">
+      Ответить
+    </button>
+    <span *ngIf="appState === 'answered'" fxLayoutGap="1em">
+      <button type="button" class="button" (click)="onClear()">
+        Ок
+      </button>
+    </span>
+    <div class="past-operations" fxLayout="row" fxLayoutAlign="start center">
+      <!-- <i class="material-icons icon-button" (click)="scrollPastOperationsLeft()">
+          keyboard_arrow_left
+        </i> -->
+      <span #pastOperationsList class="past-operations-list" [class.hidden]="!showPastOperations">
+        &nbsp;
+        <span *ngFor="let operation of pastOperations" class="past-operation">
+          {{operationToString(operation)}}
+        </span>
+      </span>
+      <!-- <i class="material-icons icon-button" (click)="scrollPastOperationsLeft()">keyboard_arrow_right</i> -->
+      <i class="material-icons past-operations-show icon-button" [ngClass]="showPastOperations ? 'past-operations-show--stop' : 'past-operations-show--play'"
+        (click)="toggleShowPastOperations()">
+        slideshow
+      </i>
+
+    </div>
+  </div>
+</section>

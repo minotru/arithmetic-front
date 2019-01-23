@@ -7,6 +7,8 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
 import { StudentsListComponent } from './students-list/students-list.component';
 import { StudentEditorComponent } from './student-editor/student-editor.component';
 import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
+import { TaskConfigComponent } from './student-page/task-config/task-config.component';
+import { TaskRunnerComponent } from './student-page/task-runner/task-runner.component';
 
 const routes: Routes = [
   {
@@ -17,6 +19,21 @@ const routes: Routes = [
   {
     path: 'student',
     component: StudentPageComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'config',
+        pathMatch: 'full'
+      },
+      {
+        path: 'config',
+        component: TaskConfigComponent
+      },
+      {
+        path: 'run',
+        component: TaskRunnerComponent
+      }
+    ],
     canActivate: [CanActivateService],
   },
   {

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -36,6 +36,8 @@ import {
 import { HeadersInterceptor } from './headers-interceptor';
 import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
 import { MapService } from './services/map.service';
+import { TaskConfigComponent } from './student-page/task-config/task-config.component';
+import { TaskRunnerComponent } from './student-page/task-runner/task-runner.component';
 
 @NgModule({
   declarations: [
@@ -48,11 +50,14 @@ import { MapService } from './services/map.service';
     StudentsListComponent,
     StudentEditorComponent,
     TasksHistoryComponent,
+    TaskConfigComponent,
+    TaskRunnerComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,

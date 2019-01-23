@@ -17,8 +17,20 @@ function beTaskToTask(beTask: any): ITask {
   return feTask;
 }
 
+const DEFAULT_TASK_CONFIG: ITaskConfig = {
+  speed: null,
+  topic: null,
+  level: null,
+  digitsCnt: 2,
+  operationsCnt: null,
+  withRemainder: false,
+};
+
 @Injectable()
 export class TaskService {
+  taskConfig: ITaskConfig = DEFAULT_TASK_CONFIG;
+  showPastOperations: boolean = false;
+
   constructor(private http: HttpClient) {
   }
 
@@ -57,5 +69,21 @@ export class TaskService {
     ).pipe(
         map(task => beTaskToTask(task)),
       );
+  }
+
+  getTaskConfig(): ITaskConfig {
+    return this.taskConfig;
+  }
+
+  setTaskConfig(taskConfig: ITaskConfig) {
+    this.taskConfig = taskConfig;
+  }
+
+  getShowPastOperations(): boolean {
+    return this.showPastOperations;
+  }
+
+  toggleShowPastOperations(): void {
+    this.showPastOperations = !this.showPastOperations;
   }
 }
