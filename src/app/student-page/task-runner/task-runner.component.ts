@@ -29,7 +29,7 @@ enum AppState {
 @Component({
   selector: 'app-task-runner',
   templateUrl: './task-runner.component.html',
-  styleUrls: ['../student-page.component.scss']
+  styleUrls: ['./task-runner.component.scss']
 })
 export class TaskRunnerComponent implements OnInit {
   currentOperationIndex = 0;
@@ -40,7 +40,7 @@ export class TaskRunnerComponent implements OnInit {
   speechSynthesis: SpeechSynthesis;
   shouldPronounceOperation: boolean;
   appState: AppState;
-  task: ITask = {} as ITask;
+  task: ITask;
 
   constructor(
     private taskService: TaskService,
@@ -49,13 +49,8 @@ export class TaskRunnerComponent implements OnInit {
 
   ngOnInit() {
     this.initSpeechSynthesis();
-    this.isLoading = true;
-    this.taskService
-      .generateTask(this.taskService.getTaskConfig())
-      .subscribe((task) => {
-        this.task = task;
-        this.isLoading = false;
-      });
+    this.task = this.taskService.getCurrentTask();
+    this.runTask();
   }
 
   operationToText(operation: IOperation): string {
@@ -113,7 +108,7 @@ export class TaskRunnerComponent implements OnInit {
     return char >= '0' && char <= '9';
   }
 
-  runApp() {
+  runTask() {
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
     this.speechSynthesis.cancel();
@@ -189,6 +184,6 @@ export class TaskRunnerComponent implements OnInit {
   }
 
   onClear() {
-    this.router.navigate(['./task-config']);
+    this.router.navigate(['student', 'task-config']);
   }
 }

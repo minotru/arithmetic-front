@@ -24,6 +24,10 @@ export class CanActivateService implements CanActivate {
       this.userService.isAuthorized() &&
       this.userService.getUser().role === UserRole.STUDENT
     ) {
+      if (state.url.includes('task-runner')) {
+        this.router.navigate(['student', 'task-config']);
+        return of(false);
+      }
       return of(true);
     }
 

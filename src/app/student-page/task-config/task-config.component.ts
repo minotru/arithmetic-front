@@ -6,8 +6,6 @@ import { TaskService } from 'src/app/services/task.service';
 import { OPERATIONS } from 'src/app/mocks/operations';
 import { Router } from '@angular/router';
 
-const TASK_CONFIG_KEY = 'TASK_CONFIG';
-
 const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
@@ -15,7 +13,7 @@ const SPEED_VALUES: number[] = [
 @Component({
   selector: 'app-task-config',
   templateUrl: './task-config.component.html',
-  styleUrls: ['../student-page.component.scss']
+  styleUrls: ['./task-config.component.scss']
 })
 export class TaskConfigComponent implements OnInit {
   topics: ITopicPreview[] = ALL_TOPICS;
@@ -133,6 +131,11 @@ export class TaskConfigComponent implements OnInit {
     const taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
     taskConfig.speed = +taskConfig.speed;
     this.taskService.setTaskConfig(taskConfig);
-    this.router.navigate(['student', 'run']);
+    this.taskService
+      .generateTask(taskConfig)
+      .subscribe((task) => {
+        this.taskService.setCurrentTask(task);
+        this.router.navigate(['student', 'task-runner']);
+      });
   }
 }

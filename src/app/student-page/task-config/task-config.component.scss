@@ -1,0 +1,62 @@
+@import '../../common.scss';
+
+.start-button:hover {
+  border: 2px solid $text-bk-1;
+}
+
+.topics {
+  width: 100%;
+}
+
+// .topic {
+// }
+.topic>* {
+  margin: auto;
+}
+
+.level {
+  border-radius: 100%;
+  text-align: center;
+  line-height: 2em;
+  width: 2em;
+  height: 2em;
+  margin-top: 0.5em;
+  background: $text-bk-2;
+}
+
+.level-name {
+  font-weight: bolder;
+}
+
+.level.selected,
+.topic-name.selected {
+  background: red;
+  color: white;
+  font-weight: bolder;
+}
+
+.level:hover {
+  transform: scale(1.1);
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.topic-name {
+  background: #FFD777;
+  padding: 0.5em;
+  border-radius: 1em;
+  font-weight: bolder;
+}
+
+.params {
+  font-size: larger;
+}
+
+.params-digits-icon {
+  color: red;
+  color: #FF8C77;
+}
+
+.params-digits-icon:hover {
+  cursor: pointer;
+}

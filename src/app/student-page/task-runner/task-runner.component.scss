@@ -1,0 +1,71 @@
+@import '../../common.scss';
+
+:host {
+  flex: 1;
+  height: 100%;
+}
+
+.task-section {
+  height: 100%;
+}
+
+.answer-input {
+  color: $text-blue;
+  width: 2em;
+  font-size: 1em;
+}
+
+.answer-input-hint {
+  font-size: 1rem;
+  color: #5190A5
+}
+
+.answer-input.valid {
+  color: $text-bk-2;
+}
+
+.answer-input.invalid {
+  color: $text-accent;
+}
+
+.task {
+  margin: 0 auto;
+}
+
+.task-text {
+  font-size: 12em;
+  color: #5190A5;
+}
+
+.past-operations {
+  width: 100%;
+  font-size: xx-large;
+  color: $text-blue;
+  border: 2px solid $text-accent;
+  border-left: 0;
+  border-right: 0;
+  white-space: nowrap;
+}
+
+.past-operations-list {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden; // border-left: 1px dashed $text-blue;
+  // border-right: 1px dashed $text-blue;
+}
+
+.past-operations-show {
+  border-left: 2px solid $text-blue;
+}
+
+.past-operations-show--play {
+  color: $text-bk-2;
+}
+
+.past-operations-show--stop {
+  color: $text-accent;
+}
+
+.past-operation {
+  padding-right: 0.5em;
+}

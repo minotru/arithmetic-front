@@ -22,16 +22,16 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'config',
+        redirectTo: 'task-config',
         pathMatch: 'full'
       },
       {
-        path: 'config',
+        path: 'task-config',
         component: TaskConfigComponent
       },
       {
-        path: 'run',
-        component: TaskRunnerComponent
+        path: 'task-runner',
+        component: TaskRunnerComponent,
       }
     ],
     canActivate: [CanActivateService],

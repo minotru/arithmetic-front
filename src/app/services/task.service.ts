@@ -9,6 +9,9 @@ import { environment } from '../../environments/environment';
 const ADMIN_TASKS = `${environment.apiUrl}/admin/tasks`;
 const STUDENT_TASKS = `${environment.apiUrl}/student/tasks`;
 
+const TASK_CONFIG_KEY = 'TASK_CONFIG';
+const SHOW_PAST_OPERATIONS_KEY = 'SHOW_PAST_OPERATIONS';
+
 function beTaskToTask(beTask: any): ITask {
   const feTask: ITask = Object.assign({}, beTask);
   if (beTask.date) {
@@ -28,10 +31,14 @@ const DEFAULT_TASK_CONFIG: ITaskConfig = {
 
 @Injectable()
 export class TaskService {
-  taskConfig: ITaskConfig = DEFAULT_TASK_CONFIG;
-  showPastOperations: boolean = false;
+  taskConfig: ITaskConfig;
+  showPastOperations: boolean;
+  currentTask: ITask = null;
 
   constructor(private http: HttpClient) {
+    const savedConfig = JSON.parse(localStorage.getItem(TASK_CONFIG_KEY));
+    this.taskConfig = savedConfig || DEFAULT_TASK_CONFIG;
+    this.showPastOperations = JSON.parse(localStorage.getItem(SHOW_PAST_OPERATIONS_KEY)) || false;
   }
 
   getTasksForUser(userId: string): Observable<ITask[]> {
@@ -76,6 +83,7 @@ export class TaskService {
   }
 
   setTaskConfig(taskConfig: ITaskConfig) {
+    window.localStorage.setItem(TASK_CONFIG_KEY, JSON.stringify(taskConfig));
     this.taskConfig = taskConfig;
   }
 
@@ -85,5 +93,14 @@ export class TaskService {
 
   toggleShowPastOperations(): void {
     this.showPastOperations = !this.showPastOperations;
+    window.localStorage.setItem(SHOW_PAST_OPERATIONS_KEY, JSON.stringify(this.showPastOperations));
+  }
+
+  setCurrentTask(task: ITask) {
+    this.currentTask = task;
+  }
+
+  getCurrentTask(): ITask {
+    return this.currentTask;
   }
 }
