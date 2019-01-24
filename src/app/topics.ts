@@ -25,26 +25,26 @@ export const TOPICS: ITopicPreview[] = [
 
 export const ALL_TOPICS: ITopicPreview[] = [
   ...TOPICS,
-  // {
-  //   name: TopicName.MULTIPLICATION,
-  //   caption: 'УМНОЖЕНИЕ',
-  //   levels: [
-  //     '2x1',
-  //     '3x1',
-  //     '2x2',
-  //     '3x2',
-  //   ],
-  // },
-  // {
-  //   name: TopicName.DIVISION,
-  //   caption: 'ДЕЛЕНИЕ',
-  //   levels: [
-  //     '2/1',
-  //     '3/1',
-  //     '2/2',
-  //     '3/2',
-  //   ],
-  // },
+  {
+    name: TopicName.MULTIPLICATION,
+    caption: 'УМНОЖЕНИЕ',
+    levels: [
+      '2x1',
+      '3x1',
+      '2x2',
+      '3x2',
+    ],
+  },
+  {
+    name: TopicName.DIVISION,
+    caption: 'ДЕЛЕНИЕ',
+    levels: [
+      '2/1',
+      '3/1',
+      '2/2',
+      '3/2',
+    ],
+  },
 ];
 
 

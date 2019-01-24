@@ -10,7 +10,7 @@
       <div *ngIf="appState === 'enter_answer' || appState === 'answered'" fxLayout="column" fxLayoutAlign="start center">
         <input type="text" maxlength="3" (keypress)="isNumberInput($event.key)" (keyup.enter)="onAnswerInput()" fxFlex="none"
           class="my-input answer-input task-text" [(ngModel)]="answerInput" [ngClass]="appState === 'answered' ? (task.isCorrect ? 'valid' : 'invalid') : ''"
-          [disabled]="isLoading" autofocus>
+          [disabled]="isLoading || appState === 'answered'" autofocus>
         <label class="answer-input-hint">
           Ответ
         </label>

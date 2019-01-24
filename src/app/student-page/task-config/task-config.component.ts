@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ITaskConfig, ITopicPreview, TopicName, ITask } from 'src/app/interfaces';
 import { ALL_TOPICS } from 'src/app/topics';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
 import { TaskService } from 'src/app/services/task.service';
 import { OPERATIONS } from 'src/app/mocks/operations';
 import { Router } from '@angular/router';
@@ -30,8 +30,8 @@ export class TaskConfigComponent implements OnInit {
   ngOnInit() {
     this.configForm = this.fb.group({
       speed: [],
-      topic: ['', Validators.required],
-      level: ['', Validators.required],
+      topic: [''],
+      level: [''],
       digitsCnt: [2],
       operationsCnt: [''],
       withRemainder: [false]
@@ -53,33 +53,24 @@ export class TaskConfigComponent implements OnInit {
   //   } as ITask;
   // }
 
+  private setRequiredFields(requiredFields: string[]) {
+    this.configForm.clearValidators();
+    [...requiredFields, 'level', 'topic'].forEach(
+      (key) => this.configForm.controls[key].setValidators(Validators.required)
+    );
+  }
+
   private setDivisionValidators() {
-    this.configForm.controls['speed']
-      .clearValidators();
-    this.configForm.controls['digitsCnt']
-      .clearValidators();
-    this.configForm.controls['operationsCnt']
-      .clearValidators();
-    this.configForm.controls['withRemainder']
-      .setValidators(Validators.required);
+    this.setRequiredFields(['withRemainder']);
   }
 
   private setPlusMinusValidators() {
-    this.configForm.controls['speed']
-      .setValidators(Validators.required);
-    this.configForm.controls['digitsCnt']
-      .setValidators(Validators.required);
-    this.configForm.controls['operationsCnt']
-      .setValidators(Validators.required);
-    this.configForm.controls['withRemainder']
-      .clearValidators();
+    this.setRequiredFields(['digitsCnt', 'speed', 'operationsCnt']);
 
   }
 
   private setMultiplicationValidators() {
-    this.setDivisionValidators();
-    this.configForm.controls['withRemainder']
-      .clearValidators();
+    this.setRequiredFields([]);
   }
 
   isPlusMinusTopic(): boolean {
