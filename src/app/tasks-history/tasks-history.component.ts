@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { TaskService } from '../services/task.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IUser, ITask, TopicName } from '../interfaces';
 import { forkJoin } from 'rxjs';
 
@@ -28,6 +28,7 @@ export class TasksHistoryComponent implements OnInit {
     private userService: UserService,
     private taskService: TaskService,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -37,7 +38,9 @@ export class TasksHistoryComponent implements OnInit {
       .subscribe(student => this.student = student);
     this.taskService
       .getTasksForUser(studentId)
-      .subscribe(tasks => this.tasks = tasks.reverse());
+      .subscribe(tasks => {
+        this.tasks = tasks;
+      });
   }
 
   topicToString(topic: TopicName) {
@@ -55,6 +58,17 @@ export class TasksHistoryComponent implements OnInit {
       case TopicName.DIVISION:
         return 'деление';
     }
+  }
+
+  get studentFullName() {
+    if (!this.student) {
+      return '';
+    }
+    return `${this.student.name} ${this.student.surname}`;
+  }
+
+  goBack() {
+    this.router.navigate(['../../'], { relativeTo: this.activatedRoute });
   }
 
 }
