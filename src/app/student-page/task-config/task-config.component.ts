@@ -58,6 +58,7 @@ export class TaskConfigComponent implements OnInit {
     [...requiredFields, 'level', 'topic'].forEach(
       (key) => this.configForm.controls[key].setValidators(Validators.required)
     );
+    this.configForm.updateValueAndValidity();
   }
 
   private setDivisionValidators() {
@@ -119,8 +120,10 @@ export class TaskConfigComponent implements OnInit {
 
   onStart() {
     this.isLoading = true;
-    const taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
-    taskConfig.speed = +taskConfig.speed;
+    let taskConfig: ITaskConfig;
+    if (this.isPlusMinusTopic()) {
+      taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
+      taskConfig.speed = +taskConfig.speed;
     this.taskService.setTaskConfig(taskConfig);
     this.taskService
       .generateTask(taskConfig)

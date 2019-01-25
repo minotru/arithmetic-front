@@ -22,39 +22,41 @@
     <h1 class="section-header-text">УСТАНОВКА ПАРАМЕТРОВ</h1>
   </header>
   <div class="params" fxLayout="column" fxLayoutGap="1em">
-    <div class="params-digits" *ngIf="isPlusMinusTopic()" fxLayout="row" fxLayoutAlign="start center">
-      Разряды:
-      &nbsp;
-      <i class="material-icons params-digits-icon" (click)="setDigitsCnt(1)" title="Однозначные">
-        {{configForm.value['digitsCnt'] >= 1 ? 'star' : 'star_border'}}
-      </i>
-      <i class="material-icons params-digits-icon" (click)="setDigitsCnt(2)" title="Двузначные">
-        {{configForm.value['digitsCnt'] >= 2 ? 'star' : 'star_border'}}
-      </i>
-      <i class="material-icons params-digits-icon" (click)="setDigitsCnt(3)" title="Трехзначные">
-        {{configForm.value['digitsCnt'] >= 3 ? 'star' : 'star_border'}}
-      </i>
+    <div *ngIf="isPlusMinusTopic()">
+      <div class="params-digits params-item" fxLayout="row" fxLayoutAlign="start center">
+        Разряды:
+        &nbsp;
+        <i class="material-icons params-digits-icon" (click)="setDigitsCnt(1)" title="Однозначные">
+          {{configForm.value['digitsCnt'] >= 1 ? 'star' : 'star_border'}}
+        </i>
+        <i class="material-icons params-digits-icon" (click)="setDigitsCnt(2)" title="Двузначные">
+          {{configForm.value['digitsCnt'] >= 2 ? 'star' : 'star_border'}}
+        </i>
+        <i class="material-icons params-digits-icon" (click)="setDigitsCnt(3)" title="Трехзначные">
+          {{configForm.value['digitsCnt'] >= 3 ? 'star' : 'star_border'}}
+        </i>
+      </div>
+      <div class="params-speed params-item">
+        Скорость:
+        <select required id="speedValues" class="my-input" [formControl]="configForm.get('speed')">
+          <option *ngFor="let opt of speedValues" [value]="opt">
+            {{opt}}
+          </option>
+        </select>
+        &nbsp;c.
+      </div>
+      <div class="operations-cnt params-item">
+        Количество действий:
+        <input class="my-input" required type="number" min="3" max="100" [formControl]="configForm.get('operationsCnt')">
+      </div>
+      <div class="params-item">
+        Показывать пример:&nbsp;
+        <input type="checkbox" class="my-checkbox" [value]="taskService.getShowPastOperations()" (change)="taskService.toggleShowPastOperations()">
+      </div>
     </div>
-    <div class="params-speed" *ngIf="isPlusMinusTopic()">
-      Скорость:
-      <select required id="speedValues" class="my-input" [formControl]="configForm.get('speed')">
-        <option *ngFor="let opt of speedValues" [value]="opt">
-          {{opt}}
-        </option>
-      </select>
-      &nbsp;c.
-    </div>
-    <div class="operations-cnt" *ngIf="isPlusMinusTopic()">
-      Количество действий:
-      <input class="my-input" required type="number" min="3" max="100" [formControl]="configForm.get('operationsCnt')">
-    </div>
-    <div class="withRemainder" *ngIf="isDivisionTopic()">
+    <div class="withRemainder params-item" *ngIf="isDivisionTopic()">
       С остатком:&nbsp;
       <input type="checkbox" class="my-checkbox" [formControl]="configForm.controls['withRemainder']">
-    </div>
-    <div>
-      Показывать пример:&nbsp;
-      <input type="checkbox" class="my-checkbox" [value]="taskService.getShowPastOperations()" (change)="taskService.toggleShowPastOperations()">
     </div>
     <button type="button" (click)="onStart()" [disabled]="!configForm.valid || isLoading" class="button start-button">
       Начать
