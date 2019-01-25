@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ITask, ITaskConfig, IOperation } from '../interfaces';
+import { ITask, ITaskConfig, IOperation, TopicName } from '../interfaces';
+import { TopicType } from '../interfaces/task';
 import { Observable, of, from } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { OPERATIONS } from '../mocks/operations';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
@@ -20,11 +20,11 @@ function beTaskToTask(beTask: any): ITask {
   return feTask;
 }
 
-const DEFAULT_TASK_CONFIG: ITaskConfig = {
-  speed: null,
+export const EMPTY_TASK_CONFIG: ITaskConfig = {
+  speed: 2,
   topic: null,
   level: null,
-  digitsCnt: 2,
+  digitsCnt: null,
   operationsCnt: null,
   withRemainder: false,
 };
@@ -37,7 +37,7 @@ export class TaskService {
 
   constructor(private http: HttpClient) {
     const savedConfig = JSON.parse(localStorage.getItem(TASK_CONFIG_KEY));
-    this.taskConfig = savedConfig || DEFAULT_TASK_CONFIG;
+    this.taskConfig = savedConfig || EMPTY_TASK_CONFIG;
     this.showPastOperations = JSON.parse(localStorage.getItem(SHOW_PAST_OPERATIONS_KEY)) || false;
   }
 
@@ -56,7 +56,7 @@ export class TaskService {
   }
 
   generateTask(config: ITaskConfig): Observable<ITask> {
-    return this.http.post<{ task: ITask, operations: IOperation[]}>(
+    return this.http.post<{ task: ITask, operations: IOperation[] }>(
       `${STUDENT_TASKS}`,
       config,
     ).pipe(
@@ -64,6 +64,7 @@ export class TaskService {
         beTask.task.operations = beTask.operations;
         const date = beTask.task.date;
         beTask.task.date = date ? new Date(date) : null;
+        beTask.task.config = config;
         return beTask.task;
       }),
     );
@@ -74,8 +75,8 @@ export class TaskService {
       `${STUDENT_TASKS}/${taskId}`,
       { answer: userAnswer },
     ).pipe(
-        map(task => beTaskToTask(task)),
-      );
+      map(task => beTaskToTask(task)),
+    );
   }
 
   getTaskConfig(): ITaskConfig {

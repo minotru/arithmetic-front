@@ -1,15 +1,19 @@
+type LevelFormatter = (level: number) => string;
+
 export interface ITopicPreview {
   name: TopicName;
   caption: string;
-  levels: string[];
+  formatLevel: LevelFormatter;
+  levels: number[];
+  topicType: TopicType;
 }
 
 export interface ITaskConfig {
   digitsCnt: number;
   topic: TopicName;
-  level: string;
-  operationsCnt: number;
-  speed: number;
+  level: number;
+  operationsCnt?: number;
+  speed?: number;
   withRemainder?: boolean;
 }
 
@@ -33,6 +37,12 @@ export enum OperationType {
   MINUS = 'minus',
   MULTIPLY = 'mul',
   DIVIDE = 'div',
+}
+
+export enum TopicType {
+  PLUS_MINUS = 'plus_minus',
+  MULTIPLICATION = 'multiplication',
+  DIVISION = 'division'
 }
 
 export enum TopicName {

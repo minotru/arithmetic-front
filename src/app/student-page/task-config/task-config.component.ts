@@ -1,14 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { ITaskConfig, ITopicPreview, TopicName, ITask } from 'src/app/interfaces';
+import { ITaskConfig, ITopicPreview, TopicName, TopicType } from 'src/app/interfaces';
 import { ALL_TOPICS } from 'src/app/topics';
-import { FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
-import { TaskService } from 'src/app/services/task.service';
-import { OPERATIONS } from 'src/app/mocks/operations';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TaskService, EMPTY_TASK_CONFIG } from 'src/app/services/task.service';
 import { Router } from '@angular/router';
 
 const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
+
+const EMPTY_CONFIG = {
+  speed: '',
+  topic: '',
+  level: '',
+  digitsCnt: '',
+  operationsCnt: '',
+  withRemainder: false,
+};
+
+function getTopicType(topicName: TopicName): TopicType {
+  const topic = ALL_TOPICS.find((_topic) => _topic.name === topicName);
+  if (topic) {
+    return topic.topicType;
+  }
+  return TopicType.PLUS_MINUS;
+}
 
 @Component({
   selector: 'app-task-config',
@@ -37,21 +53,12 @@ export class TaskConfigComponent implements OnInit {
       withRemainder: [false]
     });
     this.configForm.setValue(this.taskService.getTaskConfig());
-    this.setPlusMinusValidators();
+    this.updateValidators();
   }
 
   get showPastOperations(): boolean {
     return this.taskService.getShowPastOperations();
   }
-
-  // setupMockTask() {
-  //   this.task = {
-  //     operations: [...OPERATIONS, ...OPERATIONS, ...OPERATIONS],
-  //     config: {
-  //       speed: 1,
-  //     },
-  //   } as ITask;
-  // }
 
   private setRequiredFields(requiredFields: string[]) {
     this.configForm.clearValidators();
@@ -61,27 +68,30 @@ export class TaskConfigComponent implements OnInit {
     this.configForm.updateValueAndValidity();
   }
 
-  private setDivisionValidators() {
-    this.setRequiredFields(['withRemainder']);
+  private updateValidators() {
+    const topicType = getTopicType(<TopicName>this.configForm.value.topic);
+    const validationFieldsMap = {
+      [TopicType.PLUS_MINUS]: ['digitsCnt', 'speed', 'operationsCnt'],
+      [TopicType.MULTIPLICATION]: [],
+      [TopicType.DIVISION]: ['withRemainder']
+    };
+    this.setRequiredFields(validationFieldsMap[topicType]);
   }
 
-  private setPlusMinusValidators() {
-    this.setRequiredFields(['digitsCnt', 'speed', 'operationsCnt']);
-
+  getTopicType() {
+    return getTopicType(this.configForm.value.topic);
   }
 
-  private setMultiplicationValidators() {
-    this.setRequiredFields([]);
+  isPlusMinusTopic() {
+    return this.getTopicType() === TopicType.PLUS_MINUS;
   }
 
-  isPlusMinusTopic(): boolean {
-    const topic: TopicName = this.configForm.value['topic'];
-    return topic !== TopicName.MULTIPLICATION &&
-      topic !== TopicName.DIVISION;
+  isDivisionTopic() {
+    return this.getTopicType() === TopicType.DIVISION;
   }
 
-  isDivisionTopic(): boolean {
-    return this.configForm.value['topic'] === TopicName.DIVISION;
+  isMultiplicationTopic() {
+    return this.getTopicType() === TopicType.MULTIPLICATION;
   }
 
   selectLevel(newTopic: string, newLevel: string) {
@@ -101,15 +111,14 @@ export class TaskConfigComponent implements OnInit {
       level: newLevel,
     });
 
-    if (this.isPlusMinusTopic()) {
-      this.setPlusMinusValidators();
-    } else if (this.isDivisionTopic()) {
-      this.setDivisionValidators();
-    } else {
-      this.setMultiplicationValidators();
+    if (getTopicType(<TopicName>newTopic) !== getTopicType(topic)) {
+      this.configForm.setValue({
+        ...EMPTY_CONFIG,
+        topic: newTopic,
+        level: newLevel
+      });
+      this.updateValidators();
     }
-    Object.values(this.configForm.controls).forEach(c => c.updateValueAndValidity());
-    this.configForm.updateValueAndValidity();
   }
 
   setDigitsCnt(cnt: number) {
@@ -120,10 +129,8 @@ export class TaskConfigComponent implements OnInit {
 
   onStart() {
     this.isLoading = true;
-    let taskConfig: ITaskConfig;
-    if (this.isPlusMinusTopic()) {
-      taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
-      taskConfig.speed = +taskConfig.speed;
+    const taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
+    taskConfig.speed = +taskConfig.speed;
     this.taskService.setTaskConfig(taskConfig);
     this.taskService
       .generateTask(taskConfig)

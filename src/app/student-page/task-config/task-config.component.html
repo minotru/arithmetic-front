@@ -11,7 +11,7 @@
         <div *ngFor="let level of topic.levels" class="level" (click)="selectLevel(topic.name, level);"
           [class.selected]="topic.name === configForm.value['topic'] 
               && level === configForm.value['level']">
-          {{level}}
+          {{topic.formatLevel(level)}}
         </div>
       </div>
     </div>
