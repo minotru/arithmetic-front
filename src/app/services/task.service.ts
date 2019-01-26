@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ITask, ITaskConfig, IOperation, TopicName } from '../interfaces';
+import { ITask, ITaskConfig, IOperation } from '../interfaces';
 import { TopicType } from '../interfaces/task';
 import { Observable, of, from } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 const ADMIN_TASKS = `${environment.apiUrl}/admin/tasks`;
@@ -21,7 +21,7 @@ function beTaskToTask(beTask: any): ITask {
 }
 
 export const EMPTY_TASK_CONFIG: ITaskConfig = {
-  speed: 2,
+  speed: null,
   topic: null,
   level: null,
   digitsCnt: null,

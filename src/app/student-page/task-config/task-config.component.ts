@@ -9,15 +9,6 @@ const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
 
-const EMPTY_CONFIG = {
-  speed: '',
-  topic: '',
-  level: '',
-  digitsCnt: '',
-  operationsCnt: '',
-  withRemainder: false,
-};
-
 function getTopicType(topicName: TopicName): TopicType {
   const topic = ALL_TOPICS.find((_topic) => _topic.name === topicName);
   if (topic) {
@@ -46,11 +37,11 @@ export class TaskConfigComponent implements OnInit {
   ngOnInit() {
     this.configForm = this.fb.group({
       speed: [],
-      topic: [''],
-      level: [''],
-      digitsCnt: [2],
-      operationsCnt: [''],
-      withRemainder: [false]
+      topic: [],
+      level: [],
+      digitsCnt: [],
+      operationsCnt: [],
+      withRemainder: []
     });
     this.configForm.setValue(this.taskService.getTaskConfig());
     this.updateValidators();
@@ -61,11 +52,14 @@ export class TaskConfigComponent implements OnInit {
   }
 
   private setRequiredFields(requiredFields: string[]) {
-    this.configForm.clearValidators();
-    [...requiredFields, 'level', 'topic'].forEach(
-      (key) => this.configForm.controls[key].setValidators(Validators.required)
-    );
-    this.configForm.updateValueAndValidity();
+    const allRequiredFields = [...requiredFields, 'level', 'topic'];
+    Object.keys(this.configForm.controls).forEach((key) => {
+      this.configForm.get(key).clearValidators();
+      if (allRequiredFields.includes(key)) {
+        this.configForm.controls[key].setValidators(Validators.required);
+      }
+      this.configForm.get(key).updateValueAndValidity();
+    });
   }
 
   private updateValidators() {
@@ -113,7 +107,7 @@ export class TaskConfigComponent implements OnInit {
 
     if (getTopicType(<TopicName>newTopic) !== getTopicType(topic)) {
       this.configForm.setValue({
-        ...EMPTY_CONFIG,
+        ...EMPTY_TASK_CONFIG,
         topic: newTopic,
         level: newLevel
       });
