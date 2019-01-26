@@ -51,7 +51,7 @@
       </div>
       <div class="params-item">
         Показывать пример:&nbsp;
-        <input type="checkbox" class="my-checkbox" [value]="taskService.getShowPastOperations()" (change)="taskService.toggleShowPastOperations()">
+        <input type="checkbox" class="my-checkbox" [checked]="taskService.getShowPastOperations()" (change)="taskService.toggleShowPastOperations()">
       </div>
     </div>
     <div class="withRemainder params-item" *ngIf="isDivisionTopic()">
