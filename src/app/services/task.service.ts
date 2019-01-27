@@ -42,8 +42,8 @@ export class TaskService {
     this.showPastOperations = JSON.parse(localStorage.getItem(SHOW_PAST_OPERATIONS_KEY)) || false;
   }
 
-  getTasksForUser(userId: string): Observable<ITask[]> {
-    return this.http.get<ITask[]>(`${ADMIN_TASKS}/?userId=${userId}`)
+  getTasksForUser(userId: string, topicType?: TopicType): Observable<ITask[]> {
+    return this.http.get<ITask[]>(`${ADMIN_TASKS}/?userId=${userId}&topicType=${topicType}`)
       .pipe(
         map(tasks => tasks.map(task => beTaskToTask(task))),
       );

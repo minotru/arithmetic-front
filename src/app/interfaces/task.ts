@@ -14,6 +14,7 @@ export interface ITaskConfig {
   level: number;
   operationsCnt?: number;
   speed?: number;
+  topicType?: TopicType;
   withRemainder?: boolean;
 }
 

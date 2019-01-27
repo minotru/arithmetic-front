@@ -2,8 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { TaskService } from '../services/task.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IUser, ITask, TopicName } from '../interfaces';
-import { forkJoin } from 'rxjs';
+import { IUser, ITask, TopicName, TopicType } from '../interfaces';
+import { ALL_TOPICS } from '../topics';
+
+const formatMap = ALL_TOPICS.reduce((acc, topic) => {
+  acc[topic.name] = {
+    topicCaption: topic.caption,
+    levelsCaption: topic.levels.reduce((acc1, level) => {
+      acc1[level] = topic.formatLevel(level);
+      return acc1;
+    }, {}),
+  };
+  return acc;
+}, {});
 
 @Component({
   selector: 'app-tasks-history',
@@ -43,21 +54,12 @@ export class TasksHistoryComponent implements OnInit {
       });
   }
 
-  topicToString(topic: TopicName) {
-    switch (topic) {
-      case TopicName.SIMPLE:
-        return 'просто';
-      case TopicName.BROTHER:
-        return 'брат';
-      case TopicName.FRIEND:
-        return 'друг';
-      case TopicName.FRIEND_PLUS_BROTHER:
-        return 'друг+брат';
-      case TopicName.MULTIPLICATION:
-        return 'умножение';
-      case TopicName.DIVISION:
-        return 'деление';
-    }
+  formatTopic(task: ITask): string {
+    return formatMap[task.config.topic].topicCaption;
+  }
+
+  formatLevel(task: ITask): string {
+    return formatMap[task.config.topic].levelsCaption[task.config.level];
   }
 
   get studentFullName() {
