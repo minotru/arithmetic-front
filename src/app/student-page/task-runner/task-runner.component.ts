@@ -165,7 +165,7 @@ export class TaskRunnerComponent implements OnInit {
           this.playSound('correct');
         } else {
           this.playSound('error');
-          this.userAnswer = this.task.answer.map(answer => ({ answer: answer.toString() });
+          this.userAnswer = this.task.answer.map(answer => ({ answer: answer.toString() }));
         }
         this.appState = AppState.ANSWERED;
         this.isLoading = false;
