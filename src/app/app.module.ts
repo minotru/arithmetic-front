@@ -32,6 +32,7 @@ import {
   MatListModule,
   MatSelectModule,
   MatChipsModule,
+  MatProgressSpinnerModule,
 } from '@angular/material';
 import { HeadersInterceptor } from './headers-interceptor';
 import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
@@ -73,6 +74,7 @@ import { TaskRunnerComponent } from './student-page/task-runner/task-runner.comp
     MatListModule,
     MatSelectModule,
     MatChipsModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     UserService,

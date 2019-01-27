@@ -4,6 +4,7 @@ import { TaskService } from '../services/task.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser, ITask, TopicName, TopicType } from '../interfaces';
 import { ALL_TOPICS } from '../topics';
+import { forkJoin } from 'rxjs';
 
 const formatMap = ALL_TOPICS.reduce((acc, topic) => {
   acc[topic.name] = {
@@ -24,6 +25,7 @@ const formatMap = ALL_TOPICS.reduce((acc, topic) => {
 export class TasksHistoryComponent implements OnInit {
   student: IUser = null;
   tasks: ITask[] = [];
+  isLoading: boolean;
 
   displayedColumns: string[] = [
     'date',
@@ -44,14 +46,14 @@ export class TasksHistoryComponent implements OnInit {
 
   ngOnInit() {
     const studentId = this.activatedRoute.snapshot.params['studentId'];
-    this.userService
-      .getUserById(studentId)
-      .subscribe(student => this.student = student);
-    this.taskService
-      .getTasksForUser(studentId)
-      .subscribe(tasks => {
-        this.tasks = tasks;
-      });
+    const userRequest = this.userService.getUserById(studentId);
+    const tasksRequest = this.taskService.getTasksForUser(studentId);
+    this.isLoading = true;
+    forkJoin(userRequest, tasksRequest).subscribe((res) => {
+      this.student = res[0];
+      this.tasks = res[1];
+      this.isLoading = false;
+    });
   }
 
   formatTopic(task: ITask): string {

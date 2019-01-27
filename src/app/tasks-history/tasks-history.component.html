@@ -1,60 +1,65 @@
-<h1 style="font-size: large; text-align: center;">
-  <!-- <button type="button" mat-icon-button (click)="goBack()" style="text-align: left">
+<div *ngIf="isLoading" style="height: 100%" fxLayout="row" fxLayoutAlign="center center">
+  <mat-spinner color="warn"></mat-spinner>
+</div>
+<div *ngIf="!isLoading">
+  <h1 style="font-size: large; text-align: center;">
+    <!-- <button type="button" mat-icon-button (click)="goBack()" style="text-align: left">
     <i class="material-icons">arrow_back</i>
   </button> -->
-  <span>История занятий ученика {{studentFullName}}</span>
-</h1>
-<table mat-table [dataSource]="tasks" style="width: 100%;">
+    <span>История занятий ученика {{studentFullName}}</span>
+  </h1>
+  <table mat-table [dataSource]="tasks" style="width: 100%;">
 
-  <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef>Дата</th>
-    <td mat-cell *matCellDef="let task">
-      {{task.date | date:'dd.LL.yy HH:mm'}}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Дата</th>
+      <td mat-cell *matCellDef="let task">
+        {{task.date | date:'dd.LL.yy HH:mm'}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="topic">
-    <th mat-header-cell *matHeaderCellDef>Тема</th>
-    <td mat-cell *matCellDef="let task">
-      {{formatTopic(task)}}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="topic">
+      <th mat-header-cell *matHeaderCellDef>Тема</th>
+      <td mat-cell *matCellDef="let task">
+        {{formatTopic(task)}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="level">
-    <th mat-header-cell *matHeaderCellDef>Уровень</th>
-    <td mat-cell *matCellDef="let task">
-       {{formatLevel(task)}}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="level">
+      <th mat-header-cell *matHeaderCellDef>Уровень</th>
+      <td mat-cell *matCellDef="let task">
+        {{formatLevel(task)}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="digitsCnt">
-    <th mat-header-cell *matHeaderCellDef>Разряды</th>
-    <td mat-cell *matCellDef="let task">
-      {{task.config.digitsCnt}}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="digitsCnt">
+      <th mat-header-cell *matHeaderCellDef>Разряды</th>
+      <td mat-cell *matCellDef="let task">
+        {{task.config.digitsCnt}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="operationsCnt">
-    <th mat-header-cell *matHeaderCellDef>Действий</th>
-    <td mat-cell *matCellDef="let task">
-      {{task.config.operationsCnt}}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="operationsCnt">
+      <th mat-header-cell *matHeaderCellDef>Действий</th>
+      <td mat-cell *matCellDef="let task">
+        {{task.config.operationsCnt}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="speed">
-    <th mat-header-cell *matHeaderCellDef>Скорость</th>
-    <td mat-cell *matCellDef="let task">
-      {{task.config.speed}}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="speed">
+      <th mat-header-cell *matHeaderCellDef>Скорость</th>
+      <td mat-cell *matCellDef="let task">
+        {{task.config.speed}}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="isCorrect">
-    <th mat-header-cell *matHeaderCellDef>Правильно</th>
-    <td mat-cell *matCellDef="let task">
-      {{task.isCorrect ? 'да' : 'нет' }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="isCorrect">
+      <th mat-header-cell *matHeaderCellDef>Правильно</th>
+      <td mat-cell *matCellDef="let task">
+        {{task.isCorrect ? 'да' : 'нет' }}
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
