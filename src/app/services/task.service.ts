@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ITask, ITaskConfig, IOperation } from '../interfaces';
-import { TopicType } from '../interfaces/task';
+import { TopicType, TopicName } from '../interfaces/task';
 import { Observable, of, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ALL_TOPICS } from '../topics';
 
 const ADMIN_TASKS = `${environment.apiUrl}/admin/tasks`;
 const STUDENT_TASKS = `${environment.apiUrl}/student/tasks`;
@@ -60,22 +61,14 @@ export class TaskService {
       `${STUDENT_TASKS}`,
       config,
     ).pipe(
-      map((beTask) => {
-        beTask.task.operations = beTask.operations;
-        const date = beTask.task.date;
-        beTask.task.date = date ? new Date(date) : null;
-        beTask.task.config = config;
-        return beTask.task;
-      }),
+      map(beTaskToTask),
     );
   }
 
-  checkAnswer(taskId: string, userAnswer: number): Observable<ITask> {
-    return this.http.post<ITask>(
+  checkAnswer(taskId: string, isCorrect: boolean): Observable<void> {
+    return this.http.post<void>(
       `${STUDENT_TASKS}/${taskId}`,
-      { answer: userAnswer },
-    ).pipe(
-      map(task => beTaskToTask(task)),
+      { isCorrect },
     );
   }
 
@@ -103,5 +96,13 @@ export class TaskService {
 
   getCurrentTask(): ITask {
     return this.currentTask;
+  }
+
+  getTopicType(topicName: TopicName): TopicType {
+    const topic = ALL_TOPICS.find((_topic) => _topic.name === topicName);
+    if (topic) {
+      return topic.topicType;
+    }
+    return TopicType.PLUS_MINUS;
   }
 }

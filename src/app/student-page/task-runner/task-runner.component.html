@@ -7,18 +7,35 @@
       <span *ngIf="appState === 'running'" class="task-text">
         {{currentOperationString}}
       </span>
-      <div *ngIf="appState === 'enter_answer' || appState === 'answered'" fxLayout="column" fxLayoutAlign="start center">
-        <input type="text" maxlength="3" (keypress)="isNumberInput($event.key)" (keyup.enter)="onAnswerInput()" fxFlex="none"
-          class="my-input answer-input task-text" [(ngModel)]="answerInput" [ngClass]="appState === 'answered' ? (task.isCorrect ? 'valid' : 'invalid') : ''"
-          [disabled]="isLoading || appState === 'answered'" autofocus>
-        <label class="answer-input-hint">
-          Ответ
-        </label>
+      <div *ngIf="appState === 'enter_answer' || appState === 'answered'" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1em">
+        <div *ngFor="let value of userAnswer; index as ind; trackBy: value" fxLayout="column" fxLayoutAlign="start center">
+          <input
+            type="text"
+            maxlength="5"
+            (keypress)="isNumberInput($event.key)"
+            (keyup.enter)="onAnswerInput()"
+            fxFlex="none"
+            class="my-input answer-input task-text"
+            name="answer-{{ind}}"
+            [(ngModel)]="userAnswer[ind].answer"
+            [ngClass]="appState === 'answered' ? (task.isCorrect ? 'valid' : 'invalid') : ''"
+            [disabled]="isLoading || appState === 'answered'"
+            required
+          >
+          <label class="answer-input-hint">
+            {{answerLabels[ind]}}
+          </label>
+        </div>
       </div>
     </div>
 
-    <button *ngIf="appState === 'enter_answer'" class="enter-answer-button button" (click)="onAnswerInput()" [disabled]="isLoading"
-      type="button">
+    <button
+      *ngIf="appState === 'enter_answer'"
+      class="enter-answer-button button"
+      (click)="onAnswerInput()"
+      [disabled]="isLoading || !isAnswerEntered()"
+      type="button"
+    >
       Ответить
     </button>
     <span *ngIf="appState === 'answered'" fxLayoutGap="1em">

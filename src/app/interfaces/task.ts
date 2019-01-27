@@ -26,10 +26,10 @@ export interface ITask {
   id: string;
   userId: string;
   config: ITaskConfig;
-  answer?: number;
+  answer: number[];
   isCorrect?: boolean;
   date: Date;
-  operations?: IOperation[];
+  operations: IOperation[];
 }
 
 export enum OperationType {

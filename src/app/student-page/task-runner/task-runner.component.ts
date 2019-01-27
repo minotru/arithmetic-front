@@ -35,7 +35,8 @@ export class TaskRunnerComponent implements OnInit {
   currentOperationIndex = 0;
   timerId: number;
   isLoading: boolean;
-  answerInput: string;
+  userAnswer: { answer: string }[];
+  answerLabels: string[];
   @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
   speechSynthesis: SpeechSynthesis;
   shouldPronounceOperation: boolean;
@@ -45,12 +46,24 @@ export class TaskRunnerComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private router: Router
-  ) { }
+  ) {
+    this.task = this.taskService.getCurrentTask();
+    if (this.task.config.withRemainder) {
+      this.userAnswer = [{ answer: '' }, { answer: '' }];
+      this.answerLabels = ['Частное', 'Остаток'];
+    } else {
+      this.userAnswer = [{ answer: '' }];
+      this.answerLabels = ['Ответ'];
+    }
+  }
 
   ngOnInit() {
     this.initSpeechSynthesis();
-    this.task = this.taskService.getCurrentTask();
     this.runTask();
+  }
+
+  isAnswerEntered(): boolean {
+    return this.userAnswer.every(value => !!value.answer);
   }
 
   operationToText(operation: IOperation): string {
@@ -78,8 +91,8 @@ export class TaskRunnerComponent implements OnInit {
     const opMap: any = {
       [OperationType.PLUS]: '+',
       [OperationType.MINUS]: '-',
-      [OperationType.MULTIPLY]: '*',
-      [OperationType.DIVIDE]: '/',
+      [OperationType.MULTIPLY]: '×',
+      [OperationType.DIVIDE]: '÷',
     };
     return `${opMap[operation.operationType]}${operation.operand}`;
   }
@@ -142,21 +155,21 @@ export class TaskRunnerComponent implements OnInit {
   }
 
   onAnswerInput() {
-    const userAnswer = Number.parseInt(this.answerInput);
+    const isCorrect = this.userAnswer.every((value, ind) => +value.answer === this.task.answer[ind]);
     this.isLoading = true;
     this.taskService
-      .checkAnswer(this.task.id, userAnswer)
-      .subscribe((task => {
-        this.task = Object.assign(this.task, task);
+      .checkAnswer(this.task.id, isCorrect)
+      .subscribe(() => {
+        this.task.isCorrect = isCorrect;
         if (this.task.isCorrect) {
           this.playSound('correct');
         } else {
           this.playSound('error');
-          this.answerInput = this.task.answer.toString();
+          this.userAnswer = this.task.answer.map(answer => ({ answer: answer.toString() });
         }
         this.appState = AppState.ANSWERED;
         this.isLoading = false;
-      }));
+      });
   }
 
   playSound(soundName: string) {

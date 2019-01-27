@@ -9,14 +9,6 @@ const SPEED_VALUES: number[] = [
   7, 6, 5, 4, 3.5, 3, 2.5, 2.2, 2, 1.8, 1.5, 1.2, 1, 0.9, 0.8, 0.7,
 ];
 
-function getTopicType(topicName: TopicName): TopicType {
-  const topic = ALL_TOPICS.find((_topic) => _topic.name === topicName);
-  if (topic) {
-    return topic.topicType;
-  }
-  return TopicType.PLUS_MINUS;
-}
-
 @Component({
   selector: 'app-task-config',
   templateUrl: './task-config.component.html',
@@ -63,17 +55,16 @@ export class TaskConfigComponent implements OnInit {
   }
 
   private updateValidators() {
-    const topicType = getTopicType(<TopicName>this.configForm.value.topic);
     const validationFieldsMap = {
       [TopicType.PLUS_MINUS]: ['digitsCnt', 'speed', 'operationsCnt'],
       [TopicType.MULTIPLICATION]: [],
       [TopicType.DIVISION]: ['withRemainder']
     };
-    this.setRequiredFields(validationFieldsMap[topicType]);
+    this.setRequiredFields(validationFieldsMap[this.getTopicType()]);
   }
 
   getTopicType() {
-    return getTopicType(this.configForm.value.topic);
+    return this.taskService.getTopicType(<TopicName>this.configForm.value.topic);
   }
 
   isPlusMinusTopic() {
@@ -105,12 +96,17 @@ export class TaskConfigComponent implements OnInit {
       level: newLevel,
     });
 
-    if (getTopicType(<TopicName>newTopic) !== getTopicType(topic)) {
+    const oldTopicType = this.taskService.getTopicType(<TopicName>newTopic);
+    const newTopicType = this.taskService.getTopicType(<TopicName>topic);
+    if (oldTopicType !== newTopicType) {
       this.configForm.setValue({
         ...EMPTY_TASK_CONFIG,
         topic: newTopic,
         level: newLevel
       });
+      if (newTopicType !== TopicType.PLUS_MINUS && !this.showPastOperations) {
+        this.taskService.toggleShowPastOperations();
+      }
       this.updateValidators();
     }
   }
