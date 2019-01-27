@@ -121,10 +121,9 @@ export class TaskConfigComponent implements OnInit {
     this.isLoading = true;
     const taskConfig = Object.assign({}, this.configForm.value) as ITaskConfig;
     taskConfig.speed = +taskConfig.speed;
-    taskConfig.topicType = this.getTopicType();
     this.taskService.setTaskConfig(taskConfig);
     this.taskService
-      .generateTask(taskConfig)
+      .generateTask({ ...taskConfig, topicType: this.getTopicType() })
       .subscribe((task) => {
         this.taskService.setCurrentTask(task);
         this.router.navigate(['student', 'task-runner']);
