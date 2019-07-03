@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { OperationType, IOperation, ITask } from 'src/app/interfaces';
 import { TaskService } from 'src/app/services/task.service';
 import { Router } from '@angular/router';
+import { Howler, Howl } from 'howler';
 
 const minSpeedToUseVoiceSythesis = 1.5;
 
@@ -170,9 +171,8 @@ export class TaskRunnerComponent implements OnInit {
       this.currentOperationIndex++;
       if (this.shouldPronounceOperation && this.hasSpeechSupport) {
         this.pronounceNextOperation(this.operations[this.currentOperationIndex]);
-      } else {
-        this.playSound('tick');
       }
+      this.playSound('tick');
     }
   }
 
@@ -199,7 +199,8 @@ export class TaskRunnerComponent implements OnInit {
     if (!soundPath) {
       throw new Error(`there is no sound ${soundName}`);
     }
-    const sound = new Audio(soundPath);
+    const sound = new Howl({ src: [soundPath] });
+    // Howler.volume(1.);
     sound.play();
   }
 

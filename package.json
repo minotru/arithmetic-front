@@ -26,7 +26,8 @@
     "flex-layout": "^1.0.1",
     "core-js": "^2.5.4",
     "rxjs": "^6.0.0",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "howler": "^2.1.2"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^6.0.3",
