@@ -199,9 +199,8 @@ export class TaskRunnerComponent implements OnInit {
     if (!soundPath) {
       throw new Error(`there is no sound ${soundName}`);
     }
-    const mp3Source = `<source src="${soundPath}" type="audio/mpeg">`;
-    const soundContainer = document.getElementById('sound-container');
-    soundContainer.innerHTML = `<audio autoplay="autoplay">${mp3Source}</audio>`;
+    const sound = new Audio(soundPath);
+    sound.play();
   }
 
   get operations(): IOperation[] {
