@@ -7,6 +7,7 @@ const minSpeedToUseVoiceSythesis = 1.5;
 
 const speechSpeed = 3;
 const speechPitch = 1;
+const speechLang = 'ru-RU';
 
 const soundMap = {
   tick: 'assets/tick.mp3',
@@ -42,6 +43,8 @@ export class TaskRunnerComponent implements OnInit {
   shouldPronounceOperation: boolean;
   appState: AppState;
   task: ITask;
+  speechVoice: SpeechSynthesisVoice;
+  hasSpeechSupport: boolean;
 
   constructor(
     private taskService: TaskService,
@@ -70,14 +73,33 @@ export class TaskRunnerComponent implements OnInit {
     return `${operationTypeToText[operation.operationType]} ${operation.operand}`;
   }
 
+  setSpeechVoice(lang: string) {
+    const speechVoice = this.speechSynthesis.getVoices().find((voice) => voice.lang === lang);
+    if (!speechVoice) {
+      console.warn('This browser doesn not support russian speech synthesis');
+      this.hasSpeechSupport = false;
+      return;
+    }
+    this.speechVoice = speechVoice;
+    this.hasSpeechSupport = true;
+  }
+
   initSpeechSynthesis() {
     this.speechSynthesis = window.speechSynthesis;
+    if (!this.speechSynthesis) {
+      console.warn('No speech synthesis support');
+      this.hasSpeechSupport = false;
+      return;
+    }
+    this.setSpeechVoice(speechLang);
+    this.speechSynthesis.onvoiceschanged = () => this.setSpeechVoice(speechLang);
   }
 
   pronounceNextOperation(operation: IOperation) {
-    const utterance = new SpeechSynthesisUtterance(this.operationToText(operation));
-    utterance.voice = this.speechSynthesis.getVoices()[0];
-    utterance.lang = 'ru';
+    const text = this.operationToText(operation);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = this.speechVoice;
+    utterance.lang = speechLang;
     utterance.rate = speechSpeed;
     utterance.pitch = speechPitch;
     this.speechSynthesis.speak(utterance);
@@ -146,7 +168,7 @@ export class TaskRunnerComponent implements OnInit {
       this.appState = AppState.ENTER_ANSWER;
     } else {
       this.currentOperationIndex++;
-      if (this.shouldPronounceOperation) {
+      if (this.shouldPronounceOperation && this.hasSpeechSupport) {
         this.pronounceNextOperation(this.operations[this.currentOperationIndex]);
       } else {
         this.playSound('tick');
