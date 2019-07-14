@@ -24,9 +24,7 @@ export class TaskConfigComponent implements OnInit {
     private fb: FormBuilder,
     public taskService: TaskService,
     private router: Router
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.configForm = this.fb.group({
       speed: [],
       topic: [],
@@ -37,6 +35,9 @@ export class TaskConfigComponent implements OnInit {
     });
     this.configForm.setValue(this.taskService.getTaskConfig());
     this.updateValidators();
+  }
+
+  ngOnInit() {
   }
 
   get showPastOperations(): boolean {

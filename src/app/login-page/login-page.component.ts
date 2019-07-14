@@ -16,7 +16,12 @@ export class LoginPageComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-  ) { }
+  ) {
+    this.form = this.fb.group({
+      login: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
 
   ngOnInit() {
     if (this.userService.isAuthorized()) {
@@ -27,10 +32,6 @@ export class LoginPageComponent implements OnInit {
         return this.router.navigate(['/student']);
       }
     }
-    this.form = this.fb.group({
-      login: ['', Validators.required],
-      password: ['', Validators.required]
-    });
   }
 
   onSubmit() {

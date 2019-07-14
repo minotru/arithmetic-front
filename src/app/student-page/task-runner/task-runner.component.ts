@@ -2,13 +2,16 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { OperationType, IOperation, ITask } from 'src/app/interfaces';
 import { TaskService } from 'src/app/services/task.service';
 import { Router } from '@angular/router';
-import { Howler, Howl } from 'howler';
+import { Howl } from 'howler';
 
 const minSpeedToUseVoiceSythesis = 1.5;
 
-const speechSpeed = 3;
+const speechSpeed = {
+  mobile: 1.5,
+  desktop: 3
+};
 const speechPitch = 1;
-const speechLang = 'ru-RU';
+const speechLang = 'ru';
 
 const soundMap = {
   tick: 'assets/tick.mp3',
@@ -66,6 +69,12 @@ export class TaskRunnerComponent implements OnInit {
     this.runTask();
   }
 
+  isMobileDevice(): boolean {
+     return (typeof window.orientation !== 'undefined') ||
+      (navigator.userAgent.indexOf('IEMobile') !== -1);
+  }
+
+
   isAnswerEntered(): boolean {
     return this.userAnswer.every(value => !!value.answer);
   }
@@ -75,7 +84,8 @@ export class TaskRunnerComponent implements OnInit {
   }
 
   setSpeechVoice(lang: string) {
-    const speechVoice = this.speechSynthesis.getVoices().find((voice) => voice.lang === lang);
+    const speechVoice = this.speechSynthesis.getVoices().find((voice) => voice.lang.startsWith(lang));
+    console.log(this.speechSynthesis.getVoices());
     if (!speechVoice) {
       console.warn('This browser doesn not support russian speech synthesis');
       this.hasSpeechSupport = false;
@@ -100,8 +110,8 @@ export class TaskRunnerComponent implements OnInit {
     const text = this.operationToText(operation);
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = this.speechVoice;
-    utterance.lang = speechLang;
-    utterance.rate = speechSpeed;
+    utterance.lang = this.speechVoice.lang;
+    utterance.rate = this.isMobileDevice() ? speechSpeed.mobile : speechSpeed.desktop;
     utterance.pitch = speechPitch;
     this.speechSynthesis.speak(utterance);
   }
@@ -148,7 +158,10 @@ export class TaskRunnerComponent implements OnInit {
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
     this.speechSynthesis.cancel();
-    this.shouldPronounceOperation = this.task.config.digitsCnt < 3 && this.task.config.speed >= minSpeedToUseVoiceSythesis;
+    this.shouldPronounceOperation = (
+      this.task.config.digitsCnt < 3 &&
+      this.task.config.speed >= minSpeedToUseVoiceSythesis
+    );
     this.timerId = window.setInterval(
       () => this.onNextOperation(),
       +this.task.config.speed * 1000);
@@ -200,7 +213,6 @@ export class TaskRunnerComponent implements OnInit {
       throw new Error(`there is no sound ${soundName}`);
     }
     const sound = new Howl({ src: [soundPath] });
-    // Howler.volume(1.);
     sound.play();
   }
 

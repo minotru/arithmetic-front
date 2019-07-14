@@ -13,7 +13,7 @@
             type="text"
             maxlength="5"
             (keypress)="isNumberInput($event.key)"
-            (keyup.enter)="onAnswerInput()"
+            (keyup.enter)="isAnswerEntered() && onAnswerInput()"
             fxFlex="none"
             class="my-input answer-input task-text"
             name="answer-{{ind}}"
