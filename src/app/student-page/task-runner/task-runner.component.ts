@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { OperationType, IOperation, ITask } from 'src/app/interfaces';
 import { TaskService } from 'src/app/services/task.service';
+import { SpeechSynthesisService } from 'src/app/services/speech-synthesis.service';
 import { Router } from '@angular/router';
 import { Howl } from 'howler';
 
@@ -11,7 +12,6 @@ const speechSpeed = {
   desktop: 3
 };
 const speechPitch = 1;
-const speechLang = 'ru';
 
 const soundMap = {
   tick: 'assets/tick.mp3',
@@ -43,16 +43,14 @@ export class TaskRunnerComponent implements OnInit {
   userAnswer: { answer: string }[];
   answerLabels: string[];
   @ViewChild('pastOperationsList') pastOperationsList: HTMLElement;
-  speechSynthesis: SpeechSynthesis;
   shouldPronounceOperation: boolean;
   appState: AppState;
   task: ITask;
-  speechVoice: SpeechSynthesisVoice;
-  hasSpeechSupport: boolean;
 
   constructor(
     private taskService: TaskService,
-    private router: Router
+    private router: Router,
+    private speechSynthesisService: SpeechSynthesisService
   ) {
     this.task = this.taskService.getCurrentTask();
     if (this.task.config.withRemainder) {
@@ -65,7 +63,6 @@ export class TaskRunnerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initSpeechSynthesis();
     this.runTask();
   }
 
@@ -83,37 +80,15 @@ export class TaskRunnerComponent implements OnInit {
     return `${operationTypeToText[operation.operationType]} ${operation.operand}`;
   }
 
-  setSpeechVoice(lang: string) {
-    const speechVoice = this.speechSynthesis.getVoices().find((voice) => voice.lang.startsWith(lang));
-    console.log(this.speechSynthesis.getVoices());
-    if (!speechVoice) {
-      console.warn('This browser doesn not support russian speech synthesis');
-      this.hasSpeechSupport = false;
-      return;
-    }
-    this.speechVoice = speechVoice;
-    this.hasSpeechSupport = true;
-  }
-
-  initSpeechSynthesis() {
-    this.speechSynthesis = window.speechSynthesis;
-    if (!this.speechSynthesis) {
-      console.warn('No speech synthesis support');
-      this.hasSpeechSupport = false;
-      return;
-    }
-    this.setSpeechVoice(speechLang);
-    this.speechSynthesis.onvoiceschanged = () => this.setSpeechVoice(speechLang);
-  }
-
   pronounceNextOperation(operation: IOperation) {
     const text = this.operationToText(operation);
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = this.speechVoice;
-    utterance.lang = this.speechVoice.lang;
+    const voice = this.speechSynthesisService.getSpeechVoice();
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
     utterance.rate = this.isMobileDevice() ? speechSpeed.mobile : speechSpeed.desktop;
     utterance.pitch = speechPitch;
-    this.speechSynthesis.speak(utterance);
+    window.speechSynthesis.speak(utterance);
   }
 
   get showPastOperations() {
@@ -157,7 +132,7 @@ export class TaskRunnerComponent implements OnInit {
   runTask() {
     this.appState = AppState.RUNNING;
     this.currentOperationIndex = -1;
-    this.speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
     this.shouldPronounceOperation = (
       this.task.config.digitsCnt < 3 &&
       this.task.config.speed >= minSpeedToUseVoiceSythesis
@@ -182,7 +157,7 @@ export class TaskRunnerComponent implements OnInit {
       this.appState = AppState.ENTER_ANSWER;
     } else {
       this.currentOperationIndex++;
-      if (this.shouldPronounceOperation && this.hasSpeechSupport) {
+      if (this.shouldPronounceOperation && this.speechSynthesisService.hasSpeechSupport()) {
         this.pronounceNextOperation(this.operations[this.currentOperationIndex]);
       }
       this.playSound('tick');

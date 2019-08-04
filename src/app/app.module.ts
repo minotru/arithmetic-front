@@ -10,6 +10,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ErrorInterceptor } from './error-interceptor';
 import { UserService } from './services/user.service';
 import { TaskService } from './services/task.service';
+import { SpeechSynthesisService } from './services/speech-synthesis.service';
 import { HeaderComponent } from './header/header.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -81,6 +82,7 @@ import { TaskRunnerComponent } from './student-page/task-runner/task-runner.comp
     TaskService,
     MapService,
     CanActivateService,
+    SpeechSynthesisService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
